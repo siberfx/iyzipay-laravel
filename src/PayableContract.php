@@ -17,5 +17,5 @@ interface PayableContract
 
     public function addCreditCard(array $attributes = []): CreditCard;
 
-//    public function removeCreditCard(CreditCard $creditCard): bool;
+    public function removeCreditCard(CreditCard $creditCard): bool;
 }

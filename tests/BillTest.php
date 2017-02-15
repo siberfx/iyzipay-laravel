@@ -1,6 +1,5 @@
 <?php
 
-use Actuallymab\IyzipayLaravel\Tests\Models\User;
 use Actuallymab\IyzipayLaravel\Tests\TestCase;
 
 class BillTest extends TestCase
@@ -29,12 +28,27 @@ class BillTest extends TestCase
         $this->assertEquals($billFields['first_name'], $user->getBillFields()['first_name']);
         $this->assertEquals($billFields['last_name'], $user->getBillFields()['last_name']);
         $this->assertEquals($billFields['email'], $user->getBillFields()['email']);
-        $this->assertEquals($billFields['shipping_address']['city'], $user->getBillFields()['shipping_address']['city']);
-        $this->assertEquals($billFields['shipping_address']['country'], $user->getBillFields()['shipping_address']['country']);
-        $this->assertEquals($billFields['shipping_address']['address'], $user->getBillFields()['shipping_address']['address']);
+        $this->assertEquals(
+            $billFields['shipping_address']['city'],
+            $user->getBillFields()['shipping_address']['city']
+        );
+        $this->assertEquals(
+            $billFields['shipping_address']['country'],
+            $user->getBillFields()['shipping_address']['country']
+        );
+        $this->assertEquals(
+            $billFields['shipping_address']['address'],
+            $user->getBillFields()['shipping_address']['address']
+        );
         $this->assertEquals($billFields['billing_address']['city'], $user->getBillFields()['billing_address']['city']);
-        $this->assertEquals($billFields['billing_address']['country'], $user->getBillFields()['billing_address']['country']);
-        $this->assertEquals($billFields['billing_address']['address'], $user->getBillFields()['billing_address']['address']);
+        $this->assertEquals(
+            $billFields['billing_address']['country'],
+            $user->getBillFields()['billing_address']['country']
+        );
+        $this->assertEquals(
+            $billFields['billing_address']['address'],
+            $user->getBillFields()['billing_address']['address']
+        );
         $this->assertEquals($billFields['identity_number'], $user->getBillFields()['identity_number']);
         $this->assertEquals($billFields['mobile_number'], $user->getBillFields()['mobile_number']);
 

@@ -32,11 +32,23 @@ class CreditCardsTest extends TestCase
     {
         $user = $this->prepareBilledUser();
 
-        $this->assertInstanceOf(\Actuallymab\IyzipayLaravel\Models\CreditCard::class,
-            $user->addCreditCard($this->prepareCreditCardFields()));
+        $this->assertInstanceOf(
+            \Actuallymab\IyzipayLaravel\Models\CreditCard::class,
+            $user->addCreditCard($this->prepareCreditCardFields())
+        );
 
         $this->assertEquals(1, $user->creditCards->count());
         $this->assertNotEmpty($user->getBillFields()['iyzipay_key']);
+    }
+
+    /** @test */
+    public function remove_credit_card_operations_return_true_if_succeed()
+    {
+        $user = $this->prepareBilledUser();
+        $creditCard = $user->addCreditCard($this->prepareCreditCardFields());
+
+        $this->assertTrue($user->removeCreditCard($creditCard));
+        $this->assertEquals(0, $user->fresh()->creditCards->count());
     }
 
     protected function prepareCreditCardFields(): array

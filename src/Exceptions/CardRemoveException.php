@@ -3,7 +3,7 @@
 
 namespace Actuallymab\IyzipayLaravel\Exceptions;
 
-class CardSaveException extends \Exception
+class CardRemoveException extends \Exception
 {
 
 }

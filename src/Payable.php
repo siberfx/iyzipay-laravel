@@ -47,6 +47,11 @@ trait Payable
         return IyzipayLaravel::addCreditCard($this, $attributes);
     }
 
+    public function removeCreditCard(CreditCard $creditCard): bool
+    {
+        return IyzipayLaravel::removeCreditCard($this, $creditCard);
+    }
+
     protected function billable(): MorphOne
     {
         return $this->morphOne(Billable::class, 'billable');

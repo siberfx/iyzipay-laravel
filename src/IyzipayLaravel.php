@@ -3,6 +3,7 @@
 namespace Actuallymab\IyzipayLaravel;
 
 use Actuallymab\IyzipayLaravel\Exceptions\BillFieldsException;
+use Actuallymab\IyzipayLaravel\Exceptions\CardRemoveException;
 use Actuallymab\IyzipayLaravel\Exceptions\CreditCardFieldsException;
 use Actuallymab\IyzipayLaravel\Exceptions\IyzipayAuthenticationException;
 use Actuallymab\IyzipayLaravel\Exceptions\IyzipayConnectionException;
@@ -38,7 +39,7 @@ class IyzipayLaravel
      * @throws BillFieldsException
      * @throws CreditCardFieldsException
      */
-    public function addCreditCard(Payable $payable, array $attributes = [])
+    public function addCreditCard(Payable $payable, array $attributes = []): CreditCard
     {
         $this->validateBillable($payable);
         $this->validateCreditCardAttributes($attributes);
@@ -58,6 +59,25 @@ class IyzipayLaravel
         ]);
 
         return $creditCardModel;
+    }
+
+    /**
+     * Remove credit card for billable & payable model.
+     * @param PayableContract $payable
+     * @param CreditCard $creditCard
+     * @return bool
+     * @throws CardRemoveException
+     */
+    public function removeCreditCard(Payable $payable, CreditCard $creditCard): bool
+    {
+        if (! $payable->creditCards->pluck('token')->contains($creditCard->token)) {
+            throw new CardRemoveException();
+        }
+
+        $this->removeCardOnIyzipay($payable, $creditCard);
+        $creditCard->delete();
+
+        return true;
     }
 
     /**

@@ -10,12 +10,13 @@ class CreateCreditCardsTable extends Migration
     public function up()
     {
         Schema::create('credit_cards', function (Blueprint $table) {
+            $table->increments('id');
             $table->unsignedInteger('billable_id');
             $table->string('billable_type');
             $table->string('alias', 100);
             $table->string('number', 10);
             $table->string('token');
-            $table->primary(['billable_id', 'billable_type', 'token']);
+            $table->unique(['billable_id', 'billable_type', 'token']);
             $table->string('bank')->nullable();
             $table->timestamps();
         });

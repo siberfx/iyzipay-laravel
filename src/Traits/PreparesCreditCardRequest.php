@@ -3,14 +3,17 @@
 
 namespace Actuallymab\IyzipayLaravel\Traits;
 
+use Actuallymab\IyzipayLaravel\Exceptions\CardRemoveException;
 use Actuallymab\IyzipayLaravel\Exceptions\CardSaveException;
 use Actuallymab\IyzipayLaravel\Exceptions\CreditCardFieldsException;
+use Actuallymab\IyzipayLaravel\Models\CreditCard;
 use Actuallymab\IyzipayLaravel\PayableContract as Payable;
 use Illuminate\Support\Facades\Validator;
 use Iyzipay\Model\Card;
 use Iyzipay\Model\CardInformation;
 use Iyzipay\Options;
 use Iyzipay\Request\CreateCardRequest;
+use Iyzipay\Request\DeleteCardRequest;
 
 trait PreparesCreditCardRequest
 {
@@ -52,7 +55,7 @@ trait PreparesCreditCardRequest
         return $card;
     }
 
-    private function createCardRequest(Payable $payable, $attributes)
+    private function createCardRequest(Payable $payable, $attributes): CreateCardRequest
     {
         $cardRequest = new CreateCardRequest();
         $cardRequest->setLocale($this->getLocale());
@@ -66,6 +69,29 @@ trait PreparesCreditCardRequest
         $cardRequest->setCard($this->createCardInformation($attributes));
 
         return $cardRequest;
+    }
+
+    private function removeCardOnIyzipay(Payable $payable, CreditCard $creditCard): void
+    {
+        try {
+            $result = Card::delete($this->removeCardRequest($payable, $creditCard), $this->getOptions());
+        } catch (\Exception $e) {
+            throw new CardRemoveException();
+        }
+
+        if ($result->getStatus() != 'success') {
+            throw new CardRemoveException($result->getErrorMessage());
+        }
+    }
+
+    private function removeCardRequest(Payable $payable, CreditCard $creditCard): DeleteCardRequest
+    {
+        $removeRequest = new DeleteCardRequest();
+        $removeRequest->setCardUserKey($payable->getBillFields()['iyzipay_key']);
+        $removeRequest->setCardToken($creditCard->token);
+        $removeRequest->setLocale($this->getLocale());
+
+        return $removeRequest;
     }
 
     private function createCardInformation($attributes): CardInformation

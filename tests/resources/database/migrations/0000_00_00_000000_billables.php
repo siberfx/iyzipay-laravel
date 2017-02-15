@@ -10,9 +10,10 @@ class Billables extends Migration
     public function up()
     {
         Schema::create('billables', function (Blueprint $table) {
+            $table->increments('id');
             $table->unsignedInteger('billable_id');
             $table->string('billable_type');
-            $table->primary(['billable_id', 'billable_type']);
+            $table->unique(['billable_id', 'billable_type']);
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email');

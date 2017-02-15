@@ -16,5 +16,4 @@ class CreditCard extends Model
     {
         return $this->morphTo();
     }
-
 }
