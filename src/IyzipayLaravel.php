@@ -2,13 +2,17 @@
 
 namespace Actuallymab\IyzipayLaravel;
 
-use Actuallymab\IyzipayLaravel\Exceptions\BillFieldsException;
-use Actuallymab\IyzipayLaravel\Exceptions\CardRemoveException;
-use Actuallymab\IyzipayLaravel\Exceptions\CreditCardFieldsException;
-use Actuallymab\IyzipayLaravel\Exceptions\IyzipayAuthenticationException;
-use Actuallymab\IyzipayLaravel\Exceptions\IyzipayConnectionException;
+use Actuallymab\IyzipayLaravel\Exceptions\Card\PayableMustHaveCreditCardException;
+use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
+use Actuallymab\IyzipayLaravel\Exceptions\Card\CardRemoveException;
+use Actuallymab\IyzipayLaravel\Exceptions\Card\CreditCardFieldsException;
+use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
+use Actuallymab\IyzipayLaravel\Exceptions\Iyzipay\IyzipayAuthenticationException;
+use Actuallymab\IyzipayLaravel\Exceptions\Iyzipay\IyzipayConnectionException;
 use Actuallymab\IyzipayLaravel\Models\CreditCard;
+use Actuallymab\IyzipayLaravel\Models\Transaction;
 use Actuallymab\IyzipayLaravel\Traits\PreparesCreditCardRequest;
+use Actuallymab\IyzipayLaravel\Traits\PreparesTransactionRequest;
 use Iyzipay\Model\ApiTest;
 use Iyzipay\Options;
 use Iyzipay\Model\Locale;
@@ -17,7 +21,7 @@ use Actuallymab\IyzipayLaravel\PayableContract as Payable;
 class IyzipayLaravel
 {
 
-    use PreparesCreditCardRequest;
+    use PreparesCreditCardRequest, PreparesTransactionRequest;
 
     /**
      * @var Options
@@ -76,6 +80,44 @@ class IyzipayLaravel
     }
 
     /**
+     * @param PayableContract $payable
+     * @param $products
+     * @param $currency
+     * @param $installment
+     * @return Transaction $transactionModel
+     * @throws BillFieldsException
+     * @throws PayableMustHaveCreditCardException
+     * @throws TransactionSaveException
+     */
+    public function singlePayment(Payable $payable, $products, $currency, $installment): Transaction
+    {
+        $this->validateBillable($payable);
+        $this->validateHasCreditCard($payable);
+
+        $message = '';
+        foreach ($payable->creditCards as $creditCard) {
+            try {
+                $transaction = $this->createTransactionOnIyzipay($payable, $creditCard,
+                    compact('products', 'currency', 'installment'));
+
+                $transactionModel = new Transaction([
+                    'amount' => $transaction->getPaidPrice(),
+                    'products' => $products
+                ]);
+                $transactionModel->creditCard()->associate($creditCard);
+                $payable->transactions()->save($transactionModel);
+
+                return $transactionModel->fresh();
+            } catch (TransactionSaveException $e) {
+                $message = $e->getMessage();
+                continue;
+            }
+        }
+
+        throw new TransactionSaveException($message);
+    }
+
+    /**
      * Initializing API options with the given credentials.
      */
     private function initializeApiOptions()
@@ -111,8 +153,19 @@ class IyzipayLaravel
      */
     private function validateBillable(Payable $payable): void
     {
-        if (! $this->isBillable($payable)) {
+        if (!$this->isBillable($payable)) {
             throw new BillFieldsException();
+        }
+    }
+
+    /**
+     * @param PayableContract $payable
+     * @throws PayableMustHaveCreditCardException
+     */
+    private function validateHasCreditCard(Payable $payable): void
+    {
+        if ($payable->creditCards->isEmpty()) {
+            throw new PayableMustHaveCreditCardException();
         }
     }
 

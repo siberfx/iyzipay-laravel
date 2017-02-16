@@ -2,10 +2,11 @@
 
 namespace Actuallymab\IyzipayLaravel;
 
-use Actuallymab\IyzipayLaravel\Exceptions\AddressFieldsException;
-use Actuallymab\IyzipayLaravel\Exceptions\BillFieldsException;
+use Actuallymab\IyzipayLaravel\Exceptions\Fields\AddressFieldsException;
+use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
 use Actuallymab\IyzipayLaravel\Models\Billable;
 use Actuallymab\IyzipayLaravel\Models\CreditCard;
+use Actuallymab\IyzipayLaravel\Models\Transaction;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Facades\Validator;
@@ -13,6 +14,11 @@ use Actuallymab\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
 
 trait Payable
 {
+
+    public function getId()
+    {
+        return $this->getKey();
+    }
 
     /**
      * @param array $attributes
@@ -42,6 +48,11 @@ trait Payable
         return $this->morphMany(CreditCard::class, 'billable');
     }
 
+    public function transactions(): MorphMany
+    {
+        return $this->morphMany(Transaction::class, 'billable');
+    }
+
     public function addCreditCard(array $attributes = []): CreditCard
     {
         return IyzipayLaravel::addCreditCard($this, $attributes);
@@ -50,6 +61,11 @@ trait Payable
     public function removeCreditCard(CreditCard $creditCard): bool
     {
         return IyzipayLaravel::removeCreditCard($creditCard);
+    }
+
+    public function pay($products, $currency = 'TRY', $installment = 1)
+    {
+        return IyzipayLaravel::singlePayment($this, $products, $currency, $installment);
     }
 
     protected function billable(): MorphOne
@@ -106,4 +122,6 @@ trait Payable
             throw new AddressFieldsException();
         }
     }
+
+    abstract public function getKey();
 }

@@ -63,6 +63,14 @@ abstract class TestCase extends Orchestra
         ]);
     }
 
+    protected function prepareBilledUser(): User
+    {
+        $user = $this->createUser();
+        $user->setBillFields($this->prepareBillFields());
+
+        return $user;
+    }
+
     protected function prepareBillFields(): array
     {
         return [
@@ -79,8 +87,31 @@ abstract class TestCase extends Orchestra
                 'country' => $this->faker->country,
                 'address' => $this->faker->address
             ],
-            'identity_number' => $this->faker->randomNumber,
+            'identity_number' => $this->faker->lexify(str_repeat('?', 11)),
             'mobile_number' => $this->faker->e164PhoneNumber
+        ];
+    }
+
+    protected function prepareCreditCardFields(): array
+    {
+        return [
+            'alias' => $this->faker->word,
+            'holder' => $this->faker->name,
+            'number' => $this->faker->randomElement($this->correctCardNumbers()),
+            'month' => '01',
+            'year' => '2030'
+        ];
+    }
+
+    protected function correctCardNumbers(): array
+    {
+        return [
+            '5526080000000006',
+            '4603450000000000',
+            '5311570000000005',
+            // Non turkish cards below:
+            '5400010000000004',
+            '6221060000000004'
         ];
     }
 }

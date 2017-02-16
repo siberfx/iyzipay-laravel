@@ -3,9 +3,9 @@
 
 namespace Actuallymab\IyzipayLaravel\Traits;
 
-use Actuallymab\IyzipayLaravel\Exceptions\CardRemoveException;
-use Actuallymab\IyzipayLaravel\Exceptions\CardSaveException;
-use Actuallymab\IyzipayLaravel\Exceptions\CreditCardFieldsException;
+use Actuallymab\IyzipayLaravel\Exceptions\Card\CardRemoveException;
+use Actuallymab\IyzipayLaravel\Exceptions\Card\CardSaveException;
+use Actuallymab\IyzipayLaravel\Exceptions\Card\CreditCardFieldsException;
 use Actuallymab\IyzipayLaravel\Models\CreditCard;
 use Actuallymab\IyzipayLaravel\PayableContract as Payable;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +22,7 @@ trait PreparesCreditCardRequest
      * @param $attributes
      * @throws CreditCardFieldsException
      */
-    protected function validateCreditCardAttributes($attributes): void
+    private function validateCreditCardAttributes($attributes): void
     {
         $v = Validator::make($attributes, [
             'alias' => 'required',

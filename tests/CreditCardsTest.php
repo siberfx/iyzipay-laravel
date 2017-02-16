@@ -1,18 +1,20 @@
 <?php
 
+namespace Actuallymab\IyzipayLaravel\Tests;
 
-use Actuallymab\IyzipayLaravel\Tests\Models\User;
-use Actuallymab\IyzipayLaravel\Tests\TestCase;
+use Actuallymab\IyzipayLaravel\Exceptions\Card\CreditCardFieldsException;
+use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
+use Actuallymab\IyzipayLaravel\Models\CreditCard;
 
 class CreditCardsTest extends TestCase
 {
 
     /** @test */
-    public function must_set_bill_before_adding_credit_cards()
+    public function must_set_bill_information_before_adding_credit_cards()
     {
         $user = $this->createUser();
 
-        $this->expectException(\Actuallymab\IyzipayLaravel\Exceptions\BillFieldsException::class);
+        $this->expectException(BillFieldsException::class);
         $user->addCreditCard($this->prepareCreditCardFields());
     }
 
@@ -21,7 +23,7 @@ class CreditCardsTest extends TestCase
     {
         $user = $this->prepareBilledUser();
 
-        $this->expectException(\Actuallymab\IyzipayLaravel\Exceptions\CreditCardFieldsException::class);
+        $this->expectException(CreditCardFieldsException::class);
         $user->addCreditCard([
             'alias' => $this->faker->word
         ]);
@@ -33,7 +35,7 @@ class CreditCardsTest extends TestCase
         $user = $this->prepareBilledUser();
 
         $this->assertInstanceOf(
-            \Actuallymab\IyzipayLaravel\Models\CreditCard::class,
+            CreditCard::class,
             $user->addCreditCard($this->prepareCreditCardFields())
         );
 
@@ -49,37 +51,5 @@ class CreditCardsTest extends TestCase
 
         $this->assertTrue($user->removeCreditCard($creditCard));
         $this->assertEquals(0, $user->fresh()->creditCards->count());
-    }
-
-    protected function prepareCreditCardFields(): array
-    {
-        return [
-            'alias' => $this->faker->word,
-            'holder' => $this->faker->name,
-            'number' => $this->faker->randomElement($this->correctCardNumbers()),
-            'month' => '01',
-            'year' => '2030'
-        ];
-    }
-
-    protected function prepareBilledUser(): User
-    {
-        $user = $this->createUser();
-        $user->setBillFields($this->prepareBillFields());
-
-        return $user;
-    }
-
-    protected function correctCardNumbers(): array
-    {
-        return [
-            '5890040000000016',
-            '5526080000000006',
-            '4766620000000001',
-            '4603450000000000',
-            '4987490000000002',
-            '5400010000000004',
-            '6221060000000004'
-        ];
     }
 }

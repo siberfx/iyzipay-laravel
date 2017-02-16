@@ -4,6 +4,8 @@
 namespace Actuallymab\IyzipayLaravel\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class CreditCard extends Model
 {
@@ -12,8 +14,13 @@ class CreditCard extends Model
         'alias', 'number', 'token', 'bank'
     ];
 
-    public function billable()
+    public function billable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

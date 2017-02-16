@@ -1,6 +1,6 @@
 <?php
 
-use Actuallymab\IyzipayLaravel\Tests\TestCase;
+namespace Actuallymab\IyzipayLaravel\Tests;
 
 class BillTest extends TestCase
 {
@@ -10,7 +10,7 @@ class BillTest extends TestCase
     {
         $user = $this->createUser();
 
-        $this->expectException(\Actuallymab\IyzipayLaravel\Exceptions\BillFieldsException::class);
+        $this->expectException(\Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException::class);
         $user->setBillFields([
             'first_name' => $this->faker->firstName
         ]);
