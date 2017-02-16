@@ -63,18 +63,13 @@ class IyzipayLaravel
 
     /**
      * Remove credit card for billable & payable model.
-     * @param PayableContract $payable
      * @param CreditCard $creditCard
      * @return bool
      * @throws CardRemoveException
      */
-    public function removeCreditCard(Payable $payable, CreditCard $creditCard): bool
+    public function removeCreditCard(CreditCard $creditCard): bool
     {
-        if (! $payable->creditCards->pluck('token')->contains($creditCard->token)) {
-            throw new CardRemoveException();
-        }
-
-        $this->removeCardOnIyzipay($payable, $creditCard);
+        $this->removeCardOnIyzipay($creditCard);
         $creditCard->delete();
 
         return true;

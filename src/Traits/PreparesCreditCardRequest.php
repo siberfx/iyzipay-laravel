@@ -71,10 +71,10 @@ trait PreparesCreditCardRequest
         return $cardRequest;
     }
 
-    private function removeCardOnIyzipay(Payable $payable, CreditCard $creditCard): void
+    private function removeCardOnIyzipay(CreditCard $creditCard): void
     {
         try {
-            $result = Card::delete($this->removeCardRequest($payable, $creditCard), $this->getOptions());
+            $result = Card::delete($this->removeCardRequest($creditCard), $this->getOptions());
         } catch (\Exception $e) {
             throw new CardRemoveException();
         }
@@ -84,10 +84,10 @@ trait PreparesCreditCardRequest
         }
     }
 
-    private function removeCardRequest(Payable $payable, CreditCard $creditCard): DeleteCardRequest
+    private function removeCardRequest(CreditCard $creditCard): DeleteCardRequest
     {
         $removeRequest = new DeleteCardRequest();
-        $removeRequest->setCardUserKey($payable->getBillFields()['iyzipay_key']);
+        $removeRequest->setCardUserKey($creditCard->billable->getBillFields()['iyzipay_key']);
         $removeRequest->setCardToken($creditCard->token);
         $removeRequest->setLocale($this->getLocale());
 

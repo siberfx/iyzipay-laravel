@@ -49,7 +49,7 @@ trait Payable
 
     public function removeCreditCard(CreditCard $creditCard): bool
     {
-        return IyzipayLaravel::removeCreditCard($this, $creditCard);
+        return IyzipayLaravel::removeCreditCard($creditCard);
     }
 
     protected function billable(): MorphOne
