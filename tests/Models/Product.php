@@ -6,6 +6,7 @@ namespace Models;
 
 use Actuallymab\IyzipayLaravel\ProductContract;
 use Illuminate\Database\Eloquent\Model;
+use Iyzipay\Model\BasketItemType;
 
 class Product extends Model implements ProductContract
 {
@@ -31,4 +32,8 @@ class Product extends Model implements ProductContract
         return $this->category;
     }
 
+    public function getType()
+    {
+        return BasketItemType::VIRTUAL;
+    }
 }

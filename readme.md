@@ -12,6 +12,9 @@ For testing purposes after `composer install --prefer-dist`, you must `cp .env.e
     * Add Credit Card ✓
     * Remove Credit Card ✓
 * Single Charges ✓
+    * Collect Charges ✓
+    * Void Charges ✓
+    * Refund Charges
 * Subscriptions
     * Creating Subscriptions
     * Changing Plans

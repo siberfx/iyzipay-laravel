@@ -15,4 +15,6 @@ interface ProductContract
 
     public function getCategory();
 
+    public function getType();
+
 }

@@ -5,20 +5,25 @@ namespace Actuallymab\IyzipayLaravel\Traits;
 
 use Actuallymab\IyzipayLaravel\Exceptions\Fields\TransactionFieldsException;
 use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
+use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionVoidException;
 use Actuallymab\IyzipayLaravel\Models\CreditCard;
+use Actuallymab\IyzipayLaravel\Models\Transaction;
 use Actuallymab\IyzipayLaravel\PayableContract as Payable;
 use Actuallymab\IyzipayLaravel\ProductContract;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Iyzipay\Model\Address;
 use Iyzipay\Model\BasketItem;
-use Iyzipay\Model\BasketItemType;
 use Iyzipay\Model\Buyer;
+use Iyzipay\Model\Cancel;
 use Iyzipay\Model\Currency;
 use Iyzipay\Model\Payment;
 use Iyzipay\Model\PaymentCard;
 use Iyzipay\Model\PaymentChannel;
 use Iyzipay\Model\PaymentGroup;
 use Iyzipay\Options;
+use Iyzipay\Request\CreateCancelRequest;
 use Iyzipay\Request\CreatePaymentRequest;
 
 
@@ -27,6 +32,14 @@ trait PreparesTransactionRequest
 
     protected function validateTransactionFields($attributes): void
     {
+        $totalPrice = 0;
+        foreach ($attributes['products'] as $product) {
+            if (!$product instanceof ProductContract) {
+                throw new TransactionFieldsException();
+            }
+            $totalPrice += $product->getPrice();
+        }
+
         $v = Validator::make($attributes, [
             'installment' => 'required|numeric|min:1',
             'currency' => 'required|in:' . implode(',', [
@@ -35,14 +48,9 @@ trait PreparesTransactionRequest
                     Currency::GBP,
                     Currency::IRR,
                     Currency::USD
-                ])
+                ]),
+            'paid_price' => 'numeric|max:' . $totalPrice
         ]);
-
-        foreach ($attributes['products'] as $product) {
-            if (!$product instanceof ProductContract) {
-                throw new TransactionFieldsException();
-            }
-        }
 
         if ($v->fails()) {
             throw new TransactionFieldsException();
@@ -81,6 +89,30 @@ trait PreparesTransactionRequest
         return $payment;
     }
 
+    /**
+     * @param Transaction $transaction
+     * @return Cancel
+     * @throws TransactionVoidException
+     */
+    protected function createCancelOnIyzipay(Transaction $transaction): Cancel
+    {
+        $cancelRequest = $this->prepareCancelRequest($transaction->iyzipay_key);
+
+        try {
+            $cancel = Cancel::create($cancelRequest, $this->getOptions());
+        } catch (\Exception $e) {
+            throw new TransactionVoidException();
+        }
+
+        unset($cancelRequest);
+
+        if ($cancel->getStatus() != 'success') {
+            throw new TransactionVoidException($cancel->getErrorMessage());
+        }
+
+        return $cancel;
+    }
+
     private function createPaymentRequest(array $attributes): CreatePaymentRequest
     {
         $paymentRequest = new CreatePaymentRequest();
@@ -99,6 +131,16 @@ trait PreparesTransactionRequest
         $paymentRequest->setPaymentGroup(PaymentGroup::PRODUCT);
 
         return $paymentRequest;
+    }
+
+    private function prepareCancelRequest($iyzipayKey): CreateCancelRequest
+    {
+        $cancelRequest = new CreateCancelRequest();
+        $cancelRequest->setPaymentId($iyzipayKey);
+        $cancelRequest->setIp(request()->ip());
+        $cancelRequest->setLocale($this->getLocale());
+
+        return $cancelRequest;
     }
 
     private function preparePaymentCard(Payable $payable, CreditCard $creditCard): PaymentCard
@@ -141,7 +183,7 @@ trait PreparesTransactionRequest
         return $address;
     }
 
-    private function prepareBasketItems(array $products = []): array
+    private function prepareBasketItems(Collection $products): array
     {
         $basketItems = [];
 
@@ -151,7 +193,7 @@ trait PreparesTransactionRequest
             $item->setName($product->getName());
             $item->setCategory1($product->getCategory());
             $item->setPrice($product->getPrice());
-            $item->setItemType(BasketItemType::VIRTUAL); // @todo check out this.
+            $item->setItemType($product->getType());
             $basketItems[] = $item;
         }
 

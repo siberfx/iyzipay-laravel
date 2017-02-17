@@ -11,6 +11,7 @@ use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
 use Actuallymab\IyzipayLaravel\Models\Transaction;
 use Actuallymab\IyzipayLaravel\Tests\Models\User;
 use Models\Product;
+use Illuminate\Support\Collection;
 use Iyzipay\Model\Currency;
 
 class TransactionTest extends TestCase
@@ -62,6 +63,38 @@ class TransactionTest extends TestCase
             $this->assertInstanceOf(Transaction::class, $user->pay($products));
             $this->assertEquals(1, $user->transactions->count());
         } catch (TransactionSaveException $e) {
+            if (str_contains('System error', $e->getMessage())) { // Its weird but we face this error sometimes.
+                $this->success_transaction_operation_returns_transaction_model();
+            }
+        }
+    }
+
+    /** @test */
+    public function transaction_can_be_voided()
+    {
+        $user = $this->prepareUserHasCard();
+        $products = $this->prepareProducts();
+        try {
+            $transaction = $user->pay($products);
+            $this->assertInstanceOf(Transaction::class, $transaction->void());
+            $this->assertEquals($transaction->amount, $transaction->refunded_amount);
+            $this->assertNotNull($transaction->voided_at);
+        } catch (TransactionSaveException $e) {
+            if (str_contains('System error', $e->getMessage())) { // Its weird but we face this error sometimes.
+                $this->transaction_can_be_voided();
+            }
+        }
+    }
+
+    public function transactions_can_be_refundable()
+    {
+        $user = $this->prepareUserHasCard();
+        $products = $this->prepareProducts();
+
+        try {
+            $transaction = $user->pay($products);
+
+        } catch (TransactionSaveException $e) {
             if ($e->getMessage() != 'System error') {
                 throw $e;
             }
@@ -76,15 +109,15 @@ class TransactionTest extends TestCase
         return $user->fresh();
     }
 
-    protected function prepareProducts($count = 5): array
+    protected function prepareProducts($count = 5): Collection
     {
-        $products = [];
+        $products = new Collection();
         for ($i = 0; $i < $count; $i++) {
-            $products[] = Product::create([
+            $products->push(Product::create([
                 'name' => $this->faker->word,
                 'price' => $this->faker->numberBetween(1,100),
                 'category' => $this->faker->word
-            ]);
+            ]));
         }
 
         return $products;

@@ -7,13 +7,17 @@ use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
 use Actuallymab\IyzipayLaravel\Exceptions\Card\CardRemoveException;
 use Actuallymab\IyzipayLaravel\Exceptions\Card\CreditCardFieldsException;
 use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
+use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionVoidException;
 use Actuallymab\IyzipayLaravel\Exceptions\Iyzipay\IyzipayAuthenticationException;
 use Actuallymab\IyzipayLaravel\Exceptions\Iyzipay\IyzipayConnectionException;
 use Actuallymab\IyzipayLaravel\Models\CreditCard;
 use Actuallymab\IyzipayLaravel\Models\Transaction;
 use Actuallymab\IyzipayLaravel\Traits\PreparesCreditCardRequest;
 use Actuallymab\IyzipayLaravel\Traits\PreparesTransactionRequest;
+use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Iyzipay\Model\ApiTest;
+use Iyzipay\Model\Payment;
 use Iyzipay\Options;
 use Iyzipay\Model\Locale;
 use Actuallymab\IyzipayLaravel\PayableContract as Payable;
@@ -81,7 +85,7 @@ class IyzipayLaravel
 
     /**
      * @param PayableContract $payable
-     * @param $products
+     * @param Collection $products
      * @param $currency
      * @param $installment
      * @return Transaction $transactionModel
@@ -89,32 +93,48 @@ class IyzipayLaravel
      * @throws PayableMustHaveCreditCardException
      * @throws TransactionSaveException
      */
-    public function singlePayment(Payable $payable, $products, $currency, $installment): Transaction
+    public function singlePayment(Payable $payable, Collection $products, $currency, $installment): Transaction
     {
         $this->validateBillable($payable);
         $this->validateHasCreditCard($payable);
 
-        $message = '';
+        $messages = []; // @todo imporove here
         foreach ($payable->creditCards as $creditCard) {
             try {
                 $transaction = $this->createTransactionOnIyzipay($payable, $creditCard,
                     compact('products', 'currency', 'installment'));
 
-                $transactionModel = new Transaction([
-                    'amount' => $transaction->getPaidPrice(),
-                    'products' => $products
-                ]);
-                $transactionModel->creditCard()->associate($creditCard);
-                $payable->transactions()->save($transactionModel);
-
-                return $transactionModel->fresh();
+                return $this->storeTransactionModel($transaction, $payable, $products, $creditCard);
             } catch (TransactionSaveException $e) {
-                $message = $e->getMessage();
+                $messages[] = $creditCard->number . ': ' . $e->getMessage();
                 continue;
             }
         }
 
-        throw new TransactionSaveException($message);
+        throw new TransactionSaveException(implode(', ', $messages));
+    }
+
+    /**
+     * @param Transaction $transactionModel
+     * @return Transaction
+     * @throws TransactionVoidException
+     */
+    public function void(Transaction $transactionModel): Transaction
+    {
+        $cancel = $this->createCancelOnIyzipay($transactionModel);
+
+        $transactionModel->voided_at = Carbon::now();
+        $refunds = $transactionModel->refunds;
+        $refunds[] = [
+            'type' => 'void',
+            'amount' => $cancel->getPrice(),
+            'iyzipay_key' => $cancel->getPaymentId()
+        ];
+
+        $transactionModel->refunds = $refunds;
+        $transactionModel->save();
+
+        return $transactionModel;
     }
 
     /**
@@ -167,6 +187,40 @@ class IyzipayLaravel
         if ($payable->creditCards->isEmpty()) {
             throw new PayableMustHaveCreditCardException();
         }
+    }
+
+    /**
+     * @param Payment $transaction
+     * @param PayableContract $payable
+     * @param Collection $products
+     * @param CreditCard $creditCard
+     * @return Transaction
+     */
+    private function storeTransactionModel(
+        Payment $transaction,
+        Payable $payable,
+        Collection $products,
+        CreditCard $creditCard
+    ): Transaction {
+        $iyzipayProducts = [];
+        foreach ($transaction->getPaymentItems() as $paymentItem) {
+            $iyzipayProducts[] = [
+                'iyzipay_key' => $paymentItem->getPaymentTransactionId(),
+                'paidPrice' => $paymentItem->getPaidPrice(),
+                'product' => $products->where('id', $paymentItem->getItemId())->first()->toArray()
+            ];
+        }
+
+        $transactionModel = new Transaction([
+            'amount' => $transaction->getPaidPrice(),
+            'products' => $iyzipayProducts,
+            'iyzipay_key' => $transaction->getPaymentId()
+        ]);
+
+        $transactionModel->creditCard()->associate($creditCard);
+        $payable->transactions()->save($transactionModel);
+
+        return $transactionModel->fresh();
     }
 
     /**

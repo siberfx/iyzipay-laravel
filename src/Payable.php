@@ -2,6 +2,7 @@
 
 namespace Actuallymab\IyzipayLaravel;
 
+use Actuallymab\IyzipayLaravel\Exceptions\Card\CardRemoveException;
 use Actuallymab\IyzipayLaravel\Exceptions\Fields\AddressFieldsException;
 use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
 use Actuallymab\IyzipayLaravel\Models\Billable;
@@ -9,6 +10,7 @@ use Actuallymab\IyzipayLaravel\Models\CreditCard;
 use Actuallymab\IyzipayLaravel\Models\Transaction;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use Actuallymab\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
 
@@ -60,10 +62,13 @@ trait Payable
 
     public function removeCreditCard(CreditCard $creditCard): bool
     {
+        if (!$this->creditCards->contains($creditCard)) {
+            throw new CardRemoveException('This card doesnt belong to member!');
+        }
         return IyzipayLaravel::removeCreditCard($creditCard);
     }
 
-    public function pay($products, $currency = 'TRY', $installment = 1)
+    public function pay(Collection $products, $currency = 'TRY', $installment = 1): Transaction
     {
         return IyzipayLaravel::singlePayment($this, $products, $currency, $installment);
     }

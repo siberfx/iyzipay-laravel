@@ -17,6 +17,9 @@ class Transactions extends Migration
             $table->foreign('credit_card_id')->references('id')->on('credit_cards');
             $table->double('amount');
             $table->longText('products');
+            $table->string('iyzipay_key');
+            $table->longText('refunds')->nullable();
+            $table->timestamp('voided_at')->nullable();
             $table->timestamps();
         });
     }
