@@ -59,11 +59,10 @@ trait PreparesCreditCardRequest
     {
         $cardRequest = new CreateCardRequest();
         $cardRequest->setLocale($this->getLocale());
-        $cardRequest->setEmail($payable->getBillFields()['email']);
+        $cardRequest->setEmail($payable->bill_fields->email);
 
-        $iyzipayKey = $payable->getBillFields()['iyzipay_key'];
-        if (!empty($iyzipayKey)) {
-            $cardRequest->setCardUserKey($iyzipayKey);
+        if (!empty($payable->iyzipay_key)) {
+            $cardRequest->setCardUserKey($payable->iyzipay_key);
         }
 
         $cardRequest->setCard($this->createCardInformation($attributes));
@@ -87,7 +86,7 @@ trait PreparesCreditCardRequest
     private function removeCardRequest(CreditCard $creditCard): DeleteCardRequest
     {
         $removeRequest = new DeleteCardRequest();
-        $removeRequest->setCardUserKey($creditCard->billable->getBillFields()['iyzipay_key']);
+        $removeRequest->setCardUserKey($creditCard->owner->iyzipay_key);
         $removeRequest->setCardToken($creditCard->token);
         $removeRequest->setLocale($this->getLocale());
 

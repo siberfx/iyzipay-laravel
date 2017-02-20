@@ -62,9 +62,8 @@ class IyzipayLaravel
         ]);
         $payable->creditCards()->save($creditCardModel);
 
-        $payable->setBillFields([
-            'iyzipay_key' => $card->getCardUserKey()
-        ]);
+        $payable->iyzipay_key = $card->getCardUserKey();
+        $payable->save();
 
         return $creditCardModel;
     }
@@ -176,7 +175,7 @@ class IyzipayLaravel
      */
     private function validateBillable(Payable $payable): void
     {
-        if (!$this->isBillable($payable)) {
+        if (!$payable->isBillable()) {
             throw new BillFieldsException();
         }
     }
@@ -224,17 +223,6 @@ class IyzipayLaravel
         $payable->transactions()->save($transactionModel);
 
         return $transactionModel->fresh();
-    }
-
-    /**
-     * Check if payable model has bill attributes
-     *
-     * @param PayableContract $payable
-     * @return bool
-     */
-    private function isBillable(Payable $payable): bool
-    {
-        return (!empty($payable->getBillFields()));
     }
 
     protected function getLocale(): string

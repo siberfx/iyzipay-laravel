@@ -22,7 +22,7 @@ class Transaction extends Model
 
     protected $casts = [
         'products' => 'array',
-        'refunds' => 'array'
+        'refunds'  => 'array'
     ];
 
     protected $dates = [
@@ -33,9 +33,9 @@ class Transaction extends Model
         'refunded_amount'
     ];
 
-    public function billable()
+    public function billable(): BelongsTo
     {
-        return $this->morphTo();
+        return $this->belongsTo(config('iyzipay.billableModel'), 'billable_id');
     }
 
     public function creditCard(): BelongsTo

@@ -40,7 +40,7 @@ class CreditCardsTest extends TestCase
         );
 
         $this->assertEquals(1, $user->creditCards->count());
-        $this->assertNotEmpty($user->getBillFields()['iyzipay_key']);
+        $this->assertNotEmpty($user->iyzipay_key);
     }
 
     /** @test */
