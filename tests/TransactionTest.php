@@ -86,21 +86,6 @@ class TransactionTest extends TestCase
         }
     }
 
-    public function transactions_can_be_refundable()
-    {
-        $user = $this->prepareUserHasCard();
-        $products = $this->prepareProducts();
-
-        try {
-            $transaction = $user->pay($products);
-
-        } catch (TransactionSaveException $e) {
-            if ($e->getMessage() != 'System error') {
-                throw $e;
-            }
-        }
-    }
-
     protected function prepareUserHasCard(): User
     {
         $user = $this->prepareBilledUser();
