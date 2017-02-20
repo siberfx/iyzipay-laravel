@@ -3,7 +3,6 @@
 
 namespace Models;
 
-
 use Actuallymab\IyzipayLaravel\ProductContract;
 use Illuminate\Database\Eloquent\Model;
 use Iyzipay\Model\BasketItemType;

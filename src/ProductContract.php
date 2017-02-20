@@ -3,7 +3,6 @@
 
 namespace Actuallymab\IyzipayLaravel;
 
-
 interface ProductContract
 {
 
@@ -16,5 +15,4 @@ interface ProductContract
     public function getCategory();
 
     public function getType();
-
 }

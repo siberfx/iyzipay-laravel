@@ -26,7 +26,6 @@ use Iyzipay\Options;
 use Iyzipay\Request\CreateCancelRequest;
 use Iyzipay\Request\CreatePaymentRequest;
 
-
 trait PreparesTransactionRequest
 {
 

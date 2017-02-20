@@ -3,7 +3,6 @@
 
 namespace Actuallymab\IyzipayLaravel\Models;
 
-
 use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionVoidException;
 use Actuallymab\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
 use Carbon\Carbon;
@@ -67,5 +66,4 @@ class Transaction extends Model
 
         return $amount;
     }
-
 }

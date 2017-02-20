@@ -101,8 +101,11 @@ class IyzipayLaravel
         $messages = []; // @todo imporove here
         foreach ($payable->creditCards as $creditCard) {
             try {
-                $transaction = $this->createTransactionOnIyzipay($payable, $creditCard,
-                    compact('products', 'currency', 'installment'));
+                $transaction = $this->createTransactionOnIyzipay(
+                    $payable,
+                    $creditCard,
+                    compact('products', 'currency', 'installment')
+                );
 
                 return $this->storeTransactionModel($transaction, $payable, $products, $creditCard);
             } catch (TransactionSaveException $e) {

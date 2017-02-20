@@ -3,7 +3,6 @@
 
 namespace Actuallymab\IyzipayLaravel\Tests;
 
-
 use Actuallymab\IyzipayLaravel\Exceptions\Card\PayableMustHaveCreditCardException;
 use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
 use Actuallymab\IyzipayLaravel\Exceptions\Fields\TransactionFieldsException;
@@ -100,12 +99,11 @@ class TransactionTest extends TestCase
         for ($i = 0; $i < $count; $i++) {
             $products->push(Product::create([
                 'name' => $this->faker->word,
-                'price' => $this->faker->numberBetween(1,100),
+                'price' => $this->faker->numberBetween(1, 100),
                 'category' => $this->faker->word
             ]));
         }
 
         return $products;
     }
-
 }
