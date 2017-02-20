@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/actuallymab/iyzipay-laravel.png?label=ready&title=Ready)](https://waffle.io/actuallymab/iyzipay-laravel)
 # Iyzipay (by Iyzico) Integration for Laravel
 
 This package is under development!
