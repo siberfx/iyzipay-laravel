@@ -69,8 +69,8 @@ trait PreparesTransactionRequest
         $paymentRequest = $this->createPaymentRequest($attributes);
         $paymentRequest->setPaymentCard($this->preparePaymentCard($payable, $creditCard));
         $paymentRequest->setBuyer($this->prepareBuyer($payable));
-        $paymentRequest->setShippingAddress($this->prepareAddress($payable, 'shipping_address'));
-        $paymentRequest->setBillingAddress($this->prepareAddress($payable, 'billing_address'));
+        $paymentRequest->setShippingAddress($this->prepareAddress($payable, 'shippingAddress'));
+        $paymentRequest->setBillingAddress($this->prepareAddress($payable, 'billingAddress'));
         $paymentRequest->setBasketItems($this->prepareBasketItems($attributes['products']));
 
         try {
@@ -145,7 +145,7 @@ trait PreparesTransactionRequest
     private function preparePaymentCard(Payable $payable, CreditCard $creditCard): PaymentCard
     {
         $paymentCard = new PaymentCard();
-        $paymentCard->setCardUserKey($payable->getBillFields()['iyzipay_key']);
+        $paymentCard->setCardUserKey($payable->iyzipay_key);
         $paymentCard->setCardToken($creditCard->token);
 
         return $paymentCard;
@@ -154,30 +154,30 @@ trait PreparesTransactionRequest
     private function prepareBuyer(Payable $payable): Buyer
     {
         $buyer = new Buyer();
-        $buyer->setId($payable->getId());
+        $buyer->setId($payable->getKey());
 
-        $billFields = $payable->getBillFields();
-        $buyer->setName($billFields['first_name']);
-        $buyer->setSurname($billFields['last_name']);
-        $buyer->setEmail($billFields['email']);
-        $buyer->setGsmNumber($billFields['mobile_number']);
-        $buyer->setIdentityNumber($billFields['identity_number']);
-        $buyer->setCity($billFields['billing_address']['city']);
-        $buyer->setCountry($billFields['billing_address']['country']);
-        $buyer->setRegistrationAddress($billFields['billing_address']['address']);
+        $billFields = $payable->bill_fields;
+        $buyer->setName($billFields->firstName);
+        $buyer->setSurname($billFields->lastName);
+        $buyer->setEmail($billFields->email);
+        $buyer->setGsmNumber($billFields->mobileNumber);
+        $buyer->setIdentityNumber($billFields->identityNumber);
+        $buyer->setCity($billFields->billingAddress->city);
+        $buyer->setCountry($billFields->billingAddress->country);
+        $buyer->setRegistrationAddress($billFields->billingAddress->address);
 
         return $buyer;
     }
 
-    private function prepareAddress(Payable $payable, $type = 'shipping_address'): Address
+    private function prepareAddress(Payable $payable, $type = 'shippingAddress'): Address
     {
         $address = new Address();
 
-        $billFields = $payable->getBillFields();
-        $address->setContactName($billFields['first_name'] . ' ' . $billFields['last_name']);
-        $address->setCountry($billFields[$type]['country']);
-        $address->setAddress($billFields[$type]['address']);
-        $address->setCity($billFields[$type]['city']);
+        $billFields = $payable->bill_fields;
+        $address->setContactName($billFields->firstName . ' ' . $billFields->lastName);
+        $address->setCountry($billFields->$type->country);
+        $address->setAddress($billFields->$type->address);
+        $address->setCity($billFields->$type->city);
 
         return $address;
     }

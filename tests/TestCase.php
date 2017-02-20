@@ -2,6 +2,8 @@
 
 namespace Actuallymab\IyzipayLaravel\Tests;
 
+use Actuallymab\IyzipayLaravel\StorableClasses\Address;
+use Actuallymab\IyzipayLaravel\StorableClasses\BillFields;
 use Actuallymab\IyzipayLaravel\Tests\Models\User;
 use Actuallymab\IyzipayLaravel\IyzipayLaravelServiceProvider;
 use Dotenv\Dotenv;
@@ -30,7 +32,7 @@ abstract class TestCase extends Orchestra
 
         $this->loadMigrationsFrom([
             '--database' => 'testing',
-            '--realpath' => realpath(__DIR__ . '/resources/database/migrations'),
+            '--realpath' => realpath(__DIR__ . '/resources/database/migrations')
         ]);
     }
 
@@ -46,6 +48,8 @@ abstract class TestCase extends Orchestra
             'database' => ':memory:',
             'prefix' => '',
         ]);
+
+	    $app['config']->set('iyzipay.billableModel', 'Actuallymab\IyzipayLaravel\Tests\Models\User');
     }
 
     public function getPackageProviders($application)
@@ -63,33 +67,33 @@ abstract class TestCase extends Orchestra
         ]);
     }
 
-    protected function prepareBilledUser(): User
+    protected function prepareBillFields(): BillFields
     {
-        $user = $this->createUser();
-        $user->setBillFields($this->prepareBillFields());
-
-        return $user;
-    }
-
-    protected function prepareBillFields(): array
-    {
-        return [
+        return new BillFields([
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
             'email' => $this->faker->email,
-            'shipping_address' => [
+            'shipping_address' => new Address([
                 'city' => $this->faker->city,
                 'country' => $this->faker->country,
                 'address' => $this->faker->address
-            ],
-            'billing_address' => [
+            ]),
+            'billing_address' => new Address([
                 'city' => $this->faker->city,
                 'country' => $this->faker->country,
                 'address' => $this->faker->address
-            ],
+            ]),
             'identity_number' => $this->faker->lexify(str_repeat('?', 11)),
             'mobile_number' => $this->faker->e164PhoneNumber
-        ];
+        ]);
+    }
+
+    protected function prepareBilledUser(): User
+    {
+        $user = $this->createUser();
+        $user->bill_fields = $this->prepareBillFields();
+
+        return $user;
     }
 
     protected function prepareCreditCardFields(): array

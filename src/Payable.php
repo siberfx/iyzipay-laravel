@@ -3,56 +3,43 @@
 namespace Actuallymab\IyzipayLaravel;
 
 use Actuallymab\IyzipayLaravel\Exceptions\Card\CardRemoveException;
-use Actuallymab\IyzipayLaravel\Exceptions\Fields\AddressFieldsException;
-use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
-use Actuallymab\IyzipayLaravel\Models\Billable;
 use Actuallymab\IyzipayLaravel\Models\CreditCard;
 use Actuallymab\IyzipayLaravel\Models\Transaction;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Actuallymab\IyzipayLaravel\StorableClasses\BillFields;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Validator;
 use Actuallymab\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
 
 trait Payable
 {
 
-    public function getId()
+    public function setBillFieldsAttribute($value)
     {
-        return $this->getKey();
+        $this->attributes['bill_fields'] = (string)$value;
     }
 
     /**
-     * @param array $attributes
-     * @throws BillFieldsException
-     * @throws AddressFieldsException
+     * @param $value
+     *
+     * @return object
      */
-    public function setBillFields(array $attributes = []): void
+    public function getBillFieldsAttribute($value)
     {
-        if (!empty($this->fresh()->billable)) {
-            $this->updateBillAttributes($attributes);
-
-            return;
+        if (empty($value)) {
+            return $value;
         }
 
-        $this->validateBillAttributes($attributes);
-
-        $this->billable()->save(new Billable($attributes));
+        return (new \JsonMapper())->map(json_decode($value), new BillFields());
     }
 
-    public function getBillFields(): array
+    public function creditCards(): HasMany
     {
-        return (!empty($this->billable)) ? $this->billable->toArray() : [];
+        return $this->hasMany(CreditCard::class, 'billable_id');
     }
 
-    public function creditCards(): MorphMany
+    public function transactions(): HasMany
     {
-        return $this->morphMany(CreditCard::class, 'billable');
-    }
-
-    public function transactions(): MorphMany
-    {
-        return $this->morphMany(Transaction::class, 'billable');
+        return $this->hasMany(Transaction::class, 'billable_id');
     }
 
     public function addCreditCard(array $attributes = []): CreditCard
@@ -62,9 +49,10 @@ trait Payable
 
     public function removeCreditCard(CreditCard $creditCard): bool
     {
-        if (!$this->creditCards->contains($creditCard)) {
-            throw new CardRemoveException('This card doesnt belong to member!');
+        if ( ! $this->creditCards->contains($creditCard)) {
+            throw new CardRemoveException('This card does not belong to member!');
         }
+
         return IyzipayLaravel::removeCreditCard($creditCard);
     }
 
@@ -73,60 +61,8 @@ trait Payable
         return IyzipayLaravel::singlePayment($this, $products, $currency, $installment);
     }
 
-    protected function billable(): MorphOne
+    public function isBillable(): bool
     {
-        return $this->morphOne(Billable::class, 'billable');
+        return ! empty($this->bill_fields);
     }
-
-    /**
-     * @param $attributes
-     */
-    private function updateBillAttributes($attributes): void
-    {
-        $this->billable()->save($this->billable->fill($attributes));
-    }
-
-    /**
-     * @param $attributes
-     * @throws BillFieldsException
-     * @throws AddressFieldsException
-     */
-    private function validateBillAttributes($attributes): void
-    {
-        $v = Validator::make($attributes, [
-            'first_name' => 'required',
-            'last_name' => 'required',
-            'email' => 'required|email',
-            'shipping_address' => 'required|array',
-            'billing_address' => 'required|array',
-            'identity_number' => 'required',
-            'mobile_number' => 'required'
-        ]);
-
-        if ($v->fails()) {
-            throw new BillFieldsException();
-        }
-
-        $this->validateAddressAttributes($attributes['shipping_address']);
-        $this->validateAddressAttributes($attributes['billing_address']);
-    }
-
-    /**
-     * @param $attributes
-     * @throws AddressFieldsException
-     */
-    private function validateAddressAttributes($attributes): void
-    {
-        $v = Validator::make($attributes, [
-            'city' => 'required',
-            'country' => 'required',
-            'address' => 'required'
-        ]);
-
-        if ($v->fails()) {
-            throw new AddressFieldsException();
-        }
-    }
-
-    abstract public function getKey();
 }
