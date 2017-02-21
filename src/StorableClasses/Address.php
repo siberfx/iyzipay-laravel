@@ -3,7 +3,6 @@
 
 namespace Actuallymab\IyzipayLaravel\StorableClasses;
 
-
 use Actuallymab\IyzipayLaravel\Exceptions\Fields\AddressFieldsException;
 
 class Address extends StorableClass

@@ -3,7 +3,6 @@
 
 namespace Actuallymab\IyzipayLaravel\StorableClasses;
 
-
 abstract class StorableClass
 {
 
@@ -16,8 +15,7 @@ abstract class StorableClass
      */
     public function __construct(array $attributes = [])
     {
-        if (! empty($attributes))
-        {
+        if (! empty($attributes)) {
             $this->setAttributes($attributes)
                  ->validate();
         }
@@ -52,5 +50,4 @@ abstract class StorableClass
     }
 
     abstract protected function getFieldExceptionClass(): string;
-
 }

@@ -33,7 +33,7 @@ trait PreparesTransactionRequest
     {
         $totalPrice = 0;
         foreach ($attributes['products'] as $product) {
-            if (!$product instanceof ProductContract) {
+            if (! $product instanceof ProductContract) {
                 throw new TransactionFieldsException();
             }
             $totalPrice += $product->getPrice();
@@ -41,14 +41,14 @@ trait PreparesTransactionRequest
 
         $v = Validator::make($attributes, [
             'installment' => 'required|numeric|min:1',
-            'currency' => 'required|in:' . implode(',', [
+            'currency'    => 'required|in:' . implode(',', [
                     Currency::TL,
                     Currency::EUR,
                     Currency::GBP,
                     Currency::IRR,
                     Currency::USD
                 ]),
-            'paid_price' => 'numeric|max:' . $totalPrice
+            'paid_price'  => 'numeric|max:' . $totalPrice
         ]);
 
         if ($v->fails()) {
@@ -60,13 +60,19 @@ trait PreparesTransactionRequest
      * @param Payable $payable
      * @param CreditCard $creditCard
      * @param array $attributes
+     * @param bool $subscription
+     *
      * @return Payment
      * @throws TransactionSaveException
      */
-    protected function createTransactionOnIyzipay(Payable $payable, CreditCard $creditCard, array $attributes): Payment
-    {
+    protected function createTransactionOnIyzipay(
+        Payable $payable,
+        CreditCard $creditCard,
+        array $attributes,
+        $subscription = false
+    ): Payment {
         $this->validateTransactionFields($attributes);
-        $paymentRequest = $this->createPaymentRequest($attributes);
+        $paymentRequest = $this->createPaymentRequest($attributes, $subscription);
         $paymentRequest->setPaymentCard($this->preparePaymentCard($payable, $creditCard));
         $paymentRequest->setBuyer($this->prepareBuyer($payable));
         $paymentRequest->setShippingAddress($this->prepareAddress($payable, 'shippingAddress'));
@@ -90,6 +96,7 @@ trait PreparesTransactionRequest
 
     /**
      * @param Transaction $transaction
+     *
      * @return Cancel
      * @throws TransactionVoidException
      */
@@ -112,7 +119,7 @@ trait PreparesTransactionRequest
         return $cancel;
     }
 
-    private function createPaymentRequest(array $attributes): CreatePaymentRequest
+    private function createPaymentRequest(array $attributes, $subscription = false): CreatePaymentRequest
     {
         $paymentRequest = new CreatePaymentRequest();
         $paymentRequest->setLocale($this->getLocale());
@@ -127,7 +134,7 @@ trait PreparesTransactionRequest
         $paymentRequest->setCurrency($attributes['currency']);
         $paymentRequest->setInstallment($attributes['installment']);
         $paymentRequest->setPaymentChannel(PaymentChannel::WEB);
-        $paymentRequest->setPaymentGroup(PaymentGroup::PRODUCT);
+        $paymentRequest->setPaymentGroup(($subscription) ? PaymentGroup::SUBSCRIPTION : PaymentGroup::PRODUCT);
 
         return $paymentRequest;
     }

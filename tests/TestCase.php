@@ -10,6 +10,7 @@ use Dotenv\Dotenv;
 use Faker\Factory;
 use Orchestra\Database\ConsoleServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Actuallymab\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
 
 abstract class TestCase extends Orchestra
 {
@@ -49,7 +50,7 @@ abstract class TestCase extends Orchestra
             'prefix' => '',
         ]);
 
-	    $app['config']->set('iyzipay.billableModel', 'Actuallymab\IyzipayLaravel\Tests\Models\User');
+        $app['config']->set('iyzipay.billableModel', 'Actuallymab\IyzipayLaravel\Tests\Models\User');
     }
 
     public function getPackageProviders($application)
@@ -105,6 +106,15 @@ abstract class TestCase extends Orchestra
             'month' => '01',
             'year' => '2030'
         ];
+    }
+
+    protected function createPlans(): void
+    {
+        IyzipayLaravel::plan('Aylık Standart')->trialDays(15)->price(20);
+        IyzipayLaravel::plan('Aylık Platinum')->trialDays(15)->price(40);
+        IyzipayLaravel::plan('Yıllık Küçük')->yearly()->trialDays(15)->price(150);
+        IyzipayLaravel::plan('Yıllık Standart')->yearly()->trialDays(15)->price(200);
+        IyzipayLaravel::plan('Yıllık Platinum')->yearly()->trialDays(15)->price(400);
     }
 
     protected function correctCardNumbers(): array

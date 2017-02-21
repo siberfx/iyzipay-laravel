@@ -17,7 +17,8 @@ class Transaction extends Model
         'products',
         'refunds',
         'iyzipay_key',
-        'voided_at'
+        'voided_at',
+        'currency'
     ];
 
     protected $casts = [
@@ -43,6 +44,11 @@ class Transaction extends Model
         return $this->belongsTo(CreditCard::class);
     }
 
+    public function subscription(): BelongsTo
+    {
+        return $this->belongsTo(Subscription::class);
+    }
+
     public function void(): Transaction
     {
         if ($this->created_at < Carbon::today()->startOfDay()) {
@@ -59,11 +65,6 @@ class Transaction extends Model
 
     public function getRefundedAmountAttribute()
     {
-        $amount = 0;
-        foreach ($this->refunds as $refund) {
-            $amount += $refund['amount'];
-        }
-
-        return $amount;
+        return array_sum(array_column($this->refunds, 'amount'));
     }
 }
