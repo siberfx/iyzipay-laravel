@@ -5,7 +5,6 @@ namespace Actuallymab\IyzipayLaravel;
 
 interface ProductContract
 {
-
     public function getKey();
 
     public function getKeyName();
@@ -17,4 +16,6 @@ interface ProductContract
     public function getCategory();
 
     public function getType();
+
+    public function toArray();
 }

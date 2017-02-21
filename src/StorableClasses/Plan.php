@@ -4,8 +4,10 @@
 namespace Actuallymab\IyzipayLaravel\StorableClasses;
 
 use Actuallymab\IyzipayLaravel\Exceptions\Fields\PlanFieldsException;
+use Actuallymab\IyzipayLaravel\ProductContract;
+use Iyzipay\Model\BasketItemType;
 
-class Plan extends StorableClass
+class Plan extends StorableClass implements ProductContract
 {
 
     /**
@@ -170,5 +172,44 @@ class Plan extends StorableClass
     protected function getFieldExceptionClass(): string
     {
         return PlanFieldsException::class;
+    }
+
+    public function getKey()
+    {
+        return $this->name;
+    }
+
+    public function getKeyName()
+    {
+        return 'name';
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    public function getCategory()
+    {
+        return 'Plan';
+    }
+
+    public function getType()
+    {
+        return BasketItemType::VIRTUAL;
+    }
+
+    public function toArray()
+    {
+        return [
+            'name' => $this->name,
+            'price' => $this->price,
+            'currency' => $this->currency
+        ];
     }
 }

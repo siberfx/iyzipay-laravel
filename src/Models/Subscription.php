@@ -11,6 +11,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Subscription extends Model
 {
 
+    protected $dates = [
+        'next_charge_at',
+        'created_at',
+        'updated_at'
+    ];
+
     public function owner(): BelongsTo
     {
         return $this->belongsTo(config('iyzipay.billableModel'), 'billable_id');

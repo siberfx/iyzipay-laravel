@@ -91,13 +91,12 @@ class IyzipayLaravel
      * @param Collection $products
      * @param $currency
      * @param $installment
+     * @param bool $subscription
      *
      * @return Transaction $transactionModel
-     * @throws BillFieldsException
-     * @throws PayableMustHaveCreditCardException
      * @throws TransactionSaveException
      */
-    public function singlePayment(Payable $payable, Collection $products, $currency, $installment): Transaction
+    public function singlePayment(Payable $payable, Collection $products, $currency, $installment, $subscription = false): Transaction
     {
         $this->validateBillable($payable);
         $this->validateHasCreditCard($payable);
@@ -108,7 +107,8 @@ class IyzipayLaravel
                 $transaction = $this->createTransactionOnIyzipay(
                     $payable,
                     $creditCard,
-                    compact('products', 'currency', 'installment')
+                    compact('products', 'currency', 'installment'),
+                    $subscription
                 );
 
                 return $this->storeTransactionModel($transaction, $payable, $products, $creditCard);

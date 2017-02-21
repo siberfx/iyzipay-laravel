@@ -58,16 +58,16 @@ trait Payable
 
     public function removeCreditCard(CreditCard $creditCard): bool
     {
-        if (! $this->creditCards->contains($creditCard)) {
+        if ( ! $this->creditCards->contains($creditCard)) {
             throw new CardRemoveException('This card does not belong to member!');
         }
 
         return IyzipayLaravel::removeCreditCard($creditCard);
     }
 
-    public function pay(Collection $products, $currency = 'TRY', $installment = 1): Transaction
+    public function pay(Collection $products, $currency = 'TRY', $installment = 1, $subscription = false): Transaction
     {
-        return IyzipayLaravel::singlePayment($this, $products, $currency, $installment);
+        return IyzipayLaravel::singlePayment($this, $products, $currency, $installment, $subscription);
     }
 
     public function subscribe(Plan $plan): void
@@ -78,7 +78,7 @@ trait Payable
             new Subscription([
                 'next_charge_amount' => $plan->price,
                 'currency'           => $plan->currency,
-                'next_charge_at'     => Carbon::now()->addDays($plan->trialDays),
+                'next_charge_at'     => Carbon::now()->addDays($plan->trialDays)->startOfDay(),
                 'plan'               => $plan
             ])
         );
@@ -89,12 +89,31 @@ trait Payable
     public function isSubscribeTo(Plan $plan): bool
     {
         foreach ($this->subscriptions as $subscription) {
-            if (! $subscription->canceled() && $subscription->plan == $plan) {
+            if ( ! $subscription->canceled() &&
+                 $subscription->plan == $plan &&
+                 $subscription->next_charge_at > Carbon::today()->startOfDay()
+            ) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public function paySubsctiption()
+    {
+        foreach ($this->subscriptions as $subscription) {
+            if ($subscription->canceled() || $subscription->next_charge_at > Carbon::today()->startOfDay()) {
+                continue;
+            }
+
+            $transaction = $this->pay(collect([$subscription->plan]), $subscription->plan->currency, 1, true);
+            $transaction->subscription()->associate($subscription);
+            $transaction->save();
+
+            $subscription->next_charge_at = $subscription->next_charge_at->addMonths(($subscription->plan->interval == 'yearly') ? 12 : 1);
+            $subscription->save();
+        }
     }
 
     public function isBillable(): bool
