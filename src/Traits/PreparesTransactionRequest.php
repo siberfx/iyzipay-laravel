@@ -33,7 +33,7 @@ trait PreparesTransactionRequest
     {
         $totalPrice = 0;
         foreach ($attributes['products'] as $product) {
-            if ( ! $product instanceof ProductContract) {
+            if (! $product instanceof ProductContract) {
                 throw new TransactionFieldsException();
             }
             $totalPrice += $product->getPrice();

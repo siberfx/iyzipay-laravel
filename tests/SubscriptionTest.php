@@ -69,4 +69,17 @@ class SubscriptionTest extends TestCase
             }
         }
     }
+
+    /** @test */
+    public function payable_can_cancel_its_subscription()
+    {
+        $user = $this->prepareBilledUser();
+        $user->addCreditCard($this->prepareCreditCardFields());
+        $plan = IyzipayLaravel::plan('10 Days Later')->trialDays(10)->price(10);
+        $user->subscribe($plan);
+
+        $user->subscriptions->first()->cancel();
+
+        $this->assertFalse($user->isSubscribeTo($plan));
+    }
 }
