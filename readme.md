@@ -18,5 +18,6 @@ For testing purposes after `composer install --prefer-dist`, you must `cp .env.e
     * Refund Charges
 * Subscriptions
     * Creating Plans ✓
-    * Creating Subscriptions
-    * Canceling Subscriptions
+    * Creating Subscriptions ✓ 
+    * Canceling Subscriptions ✓
+* Documentation
