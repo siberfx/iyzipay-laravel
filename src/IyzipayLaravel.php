@@ -5,13 +5,14 @@ namespace Actuallymab\IyzipayLaravel;
 use Actuallymab\IyzipayLaravel\Exceptions\Card\PayableMustHaveCreditCardException;
 use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
 use Actuallymab\IyzipayLaravel\Exceptions\Card\CardRemoveException;
-use Actuallymab\IyzipayLaravel\Exceptions\Card\CreditCardFieldsException;
+use Actuallymab\IyzipayLaravel\Exceptions\Fields\CreditCardFieldsException;
 use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
 use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionVoidException;
 use Actuallymab\IyzipayLaravel\Exceptions\Iyzipay\IyzipayAuthenticationException;
 use Actuallymab\IyzipayLaravel\Exceptions\Iyzipay\IyzipayConnectionException;
 use Actuallymab\IyzipayLaravel\Models\CreditCard;
 use Actuallymab\IyzipayLaravel\Models\Transaction;
+use Actuallymab\IyzipayLaravel\Traits\ManagesPlans;
 use Actuallymab\IyzipayLaravel\Traits\PreparesCreditCardRequest;
 use Actuallymab\IyzipayLaravel\Traits\PreparesTransactionRequest;
 use Carbon\Carbon;
@@ -25,7 +26,7 @@ use Actuallymab\IyzipayLaravel\PayableContract as Payable;
 class IyzipayLaravel
 {
 
-    use PreparesCreditCardRequest, PreparesTransactionRequest;
+    use PreparesCreditCardRequest, PreparesTransactionRequest, ManagesPlans;
 
     /**
      * @var Options
@@ -43,6 +44,7 @@ class IyzipayLaravel
      *
      * @param PayableContract $payable
      * @param array $attributes
+     *
      * @return CreditCard
      * @throws BillFieldsException
      * @throws CreditCardFieldsException
@@ -55,10 +57,10 @@ class IyzipayLaravel
         $card = $this->createCardOnIyzipay($payable, $attributes);
 
         $creditCardModel = new CreditCard([
-            'alias' => $card->getCardAlias(),
+            'alias'  => $card->getCardAlias(),
             'number' => $card->getBinNumber(),
-            'token' => $card->getCardToken(),
-            'bank' => $card->getCardBankName()
+            'token'  => $card->getCardToken(),
+            'bank'   => $card->getCardBankName()
         ]);
         $payable->creditCards()->save($creditCardModel);
 
@@ -70,7 +72,9 @@ class IyzipayLaravel
 
     /**
      * Remove credit card for billable & payable model.
+     *
      * @param CreditCard $creditCard
+     *
      * @return bool
      * @throws CardRemoveException
      */
@@ -87,6 +91,7 @@ class IyzipayLaravel
      * @param Collection $products
      * @param $currency
      * @param $installment
+     *
      * @return Transaction $transactionModel
      * @throws BillFieldsException
      * @throws PayableMustHaveCreditCardException
@@ -118,6 +123,7 @@ class IyzipayLaravel
 
     /**
      * @param Transaction $transactionModel
+     *
      * @return Transaction
      * @throws TransactionVoidException
      */
@@ -126,10 +132,10 @@ class IyzipayLaravel
         $cancel = $this->createCancelOnIyzipay($transactionModel);
 
         $transactionModel->voided_at = Carbon::now();
-        $refunds = $transactionModel->refunds;
-        $refunds[] = [
-            'type' => 'void',
-            'amount' => $cancel->getPrice(),
+        $refunds                     = $transactionModel->refunds;
+        $refunds[]                   = [
+            'type'        => 'void',
+            'amount'      => $cancel->getPrice(),
             'iyzipay_key' => $cancel->getPaymentId()
         ];
 
@@ -171,17 +177,19 @@ class IyzipayLaravel
 
     /**
      * @param PayableContract $payable
+     *
      * @throws BillFieldsException
      */
     private function validateBillable(Payable $payable): void
     {
-        if (!$payable->isBillable()) {
+        if (! $payable->isBillable()) {
             throw new BillFieldsException();
         }
     }
 
     /**
      * @param PayableContract $payable
+     *
      * @throws PayableMustHaveCreditCardException
      */
     private function validateHasCreditCard(Payable $payable): void
@@ -196,6 +204,7 @@ class IyzipayLaravel
      * @param PayableContract $payable
      * @param Collection $products
      * @param CreditCard $creditCard
+     *
      * @return Transaction
      */
     private function storeTransactionModel(
@@ -208,15 +217,19 @@ class IyzipayLaravel
         foreach ($transaction->getPaymentItems() as $paymentItem) {
             $iyzipayProducts[] = [
                 'iyzipay_key' => $paymentItem->getPaymentTransactionId(),
-                'paidPrice' => $paymentItem->getPaidPrice(),
-                'product' => $products->where('id', $paymentItem->getItemId())->first()->toArray()
+                'paidPrice'   => $paymentItem->getPaidPrice(),
+                'product'     => $products->where(
+                    $products[0]->getKeyName(),
+                    $paymentItem->getItemId()
+                )->first()->toArray()
             ];
         }
 
         $transactionModel = new Transaction([
-            'amount' => $transaction->getPaidPrice(),
-            'products' => $iyzipayProducts,
-            'iyzipay_key' => $transaction->getPaymentId()
+            'amount'      => $transaction->getPaidPrice(),
+            'products'    => $iyzipayProducts,
+            'iyzipay_key' => $transaction->getPaymentId(),
+            'currency'    => $transaction->getCurrency()
         ]);
 
         $transactionModel->creditCard()->associate($creditCard);

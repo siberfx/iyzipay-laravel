@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreditCards extends Migration
+class Subscriptions extends Migration
 {
 
     protected $billableTableName;
@@ -20,21 +20,21 @@ class CreditCards extends Migration
 
     public function up()
     {
-        Schema::create('credit_cards', function (Blueprint $table) {
+        Schema::create('subscriptions', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('billable_id');
             $table->foreign('billable_id')->references('id')->on($this->billableTableName);
-            $table->string('alias', 100);
-            $table->string('number', 10);
-            $table->string('token');
-            $table->unique(['billable_id', 'token']);
-            $table->string('bank')->nullable();
+            $table->double('next_charge_amount')->default(0);
+            $table->string('currency')->default('try');
+            $table->timestamp('next_charge_at')->nullable();
+            $table->timestamp('canceled_at')->nullable();
+            $table->longText('plan');
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('credit_cards');
+        Schema::dropIfExists('subscriptions');
     }
 }

@@ -4,8 +4,12 @@ namespace Actuallymab\IyzipayLaravel;
 
 use Actuallymab\IyzipayLaravel\Exceptions\Card\CardRemoveException;
 use Actuallymab\IyzipayLaravel\Models\CreditCard;
+use Actuallymab\IyzipayLaravel\Models\Subscription;
 use Actuallymab\IyzipayLaravel\Models\Transaction;
 use Actuallymab\IyzipayLaravel\StorableClasses\BillFields;
+use Actuallymab\IyzipayLaravel\StorableClasses\Plan;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Actuallymab\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
@@ -42,6 +46,11 @@ trait Payable
         return $this->hasMany(Transaction::class, 'billable_id');
     }
 
+    public function subscriptions(): HasMany
+    {
+        return $this->hasMany(Subscription::class, 'billable_id');
+    }
+
     public function addCreditCard(array $attributes = []): CreditCard
     {
         return IyzipayLaravel::addCreditCard($this, $attributes);
@@ -49,7 +58,7 @@ trait Payable
 
     public function removeCreditCard(CreditCard $creditCard): bool
     {
-        if ( ! $this->creditCards->contains($creditCard)) {
+        if (! $this->creditCards->contains($creditCard)) {
             throw new CardRemoveException('This card does not belong to member!');
         }
 
@@ -59,6 +68,33 @@ trait Payable
     public function pay(Collection $products, $currency = 'TRY', $installment = 1): Transaction
     {
         return IyzipayLaravel::singlePayment($this, $products, $currency, $installment);
+    }
+
+    public function subscribe(Plan $plan): void
+    {
+        Model::unguard();
+
+        $this->subscriptions()->save(
+            new Subscription([
+                'next_charge_amount' => $plan->price,
+                'currency'           => $plan->currency,
+                'next_charge_at'     => Carbon::now()->addDays($plan->trialDays),
+                'plan'               => $plan
+            ])
+        );
+
+        Model::reguard();
+    }
+
+    public function isSubscribeTo(Plan $plan): bool
+    {
+        foreach ($this->subscriptions as $subscription) {
+            if (! $subscription->canceled() && $subscription->plan == $plan) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function isBillable(): bool

@@ -32,5 +32,4 @@ class Billable extends Migration
             $table->dropColumn(['bill_fields', 'iyzipay_key']);
         });
     }
-
 }

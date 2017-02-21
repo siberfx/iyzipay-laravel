@@ -4,6 +4,7 @@ namespace Actuallymab\IyzipayLaravel\Tests;
 
 use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
 use Actuallymab\IyzipayLaravel\StorableClasses\BillFields;
+use Actuallymab\IyzipayLaravel\IyzipayLaravel;
 
 class BillTest extends TestCase
 {
@@ -23,8 +24,8 @@ class BillTest extends TestCase
     /** @test */
     public function check_bill_fields_has_been_set_correct_and_can_be_updated_after_creation()
     {
-        $user = $this->createUser();
-        $billFields = $this->prepareBillFields();
+        $user              = $this->createUser();
+        $billFields        = $this->prepareBillFields();
         $user->bill_fields = $billFields;
 
         $this->assertEquals($billFields->firstName, $user->bill_fields->firstName);

@@ -5,7 +5,7 @@ namespace Actuallymab\IyzipayLaravel\Traits;
 
 use Actuallymab\IyzipayLaravel\Exceptions\Card\CardRemoveException;
 use Actuallymab\IyzipayLaravel\Exceptions\Card\CardSaveException;
-use Actuallymab\IyzipayLaravel\Exceptions\Card\CreditCardFieldsException;
+use Actuallymab\IyzipayLaravel\Exceptions\Fields\CreditCardFieldsException;
 use Actuallymab\IyzipayLaravel\Models\CreditCard;
 use Actuallymab\IyzipayLaravel\PayableContract as Payable;
 use Illuminate\Support\Facades\Validator;

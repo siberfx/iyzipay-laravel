@@ -2,7 +2,7 @@
 
 namespace Actuallymab\IyzipayLaravel\Tests;
 
-use Actuallymab\IyzipayLaravel\Exceptions\Card\CreditCardFieldsException;
+use Actuallymab\IyzipayLaravel\Exceptions\Fields\CreditCardFieldsException;
 use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
 use Actuallymab\IyzipayLaravel\Models\CreditCard;
 
