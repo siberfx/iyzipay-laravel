@@ -83,6 +83,8 @@ trait Payable
             ])
         );
 
+        $this->paySubscription();
+
         Model::reguard();
     }
 
@@ -100,7 +102,7 @@ trait Payable
         return false;
     }
 
-    public function paySubsctiption()
+    public function paySubscription()
     {
         foreach ($this->subscriptions as $subscription) {
             if ($subscription->canceled() || $subscription->next_charge_at > Carbon::today()->startOfDay()) {

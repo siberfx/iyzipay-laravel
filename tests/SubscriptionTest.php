@@ -40,7 +40,7 @@ class SubscriptionTest extends TestCase
         $user->subscribe($plan);
 
         try {
-            $user->paySubsctiption();
+            $user->paySubscription();
             $this->assertEquals(1, $user->transactions->count());
             $this->assertEquals(1, $user->subscriptions->first()->transactions->count());
             $this->assertEquals(Carbon::now()->startOfDay()->addMonth(), $user->subscriptions->first()->next_charge_at);
@@ -60,7 +60,7 @@ class SubscriptionTest extends TestCase
         $user->subscribe($plan);
 
         try {
-            $user->paySubsctiption();
+            $user->paySubscription();
             $this->assertEquals(0, $user->transactions->count());
             $this->assertEquals(0, $user->subscriptions->first()->transactions->count());
         } catch (TransactionSaveException $e) {

@@ -110,6 +110,7 @@ abstract class TestCase extends Orchestra
 
     protected function createPlans(): void
     {
+        IyzipayLaravel::plan('Aylık Ücretisiz');
         IyzipayLaravel::plan('Aylık Standart')->trialDays(15)->price(20);
         IyzipayLaravel::plan('Aylık Platinum')->trialDays(15)->price(40);
         IyzipayLaravel::plan('Yıllık Küçük')->yearly()->trialDays(15)->price(150);
