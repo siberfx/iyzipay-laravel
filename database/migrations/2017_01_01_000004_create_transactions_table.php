@@ -26,7 +26,10 @@ class CreateTransactionsTable extends Migration
             $table->foreign('billable_id')->references('id')->on($this->billableTableName);
             $table->unsignedInteger('credit_card_id');
             $table->foreign('credit_card_id')->references('id')->on('credit_cards');
+            $table->unsignedInteger('subscription_id')->nullable();
+            $table->foreign('subscription_id')->references('id')->on('subscriptions');
             $table->double('amount');
+            $table->string('currency', 3)->default('TRY');
             $table->longText('products');
             $table->string('iyzipay_key');
             $table->longText('refunds')->nullable();

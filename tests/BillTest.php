@@ -4,7 +4,6 @@ namespace Actuallymab\IyzipayLaravel\Tests;
 
 use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
 use Actuallymab\IyzipayLaravel\StorableClasses\BillFields;
-use Actuallymab\IyzipayLaravel\IyzipayLaravel;
 
 class BillTest extends TestCase
 {
