@@ -16,7 +16,7 @@ class SubscriptionTest extends TestCase
         $this->createPlans();
         $user = $this->createUser();
 
-        $plan = IyzipayLaravel::monthlyPlans()->first();
+        $plan        = IyzipayLaravel::monthlyPlans()->first();
         $anotherPlan = IyzipayLaravel::yearlyPlans()->first();
         $user->subscribe($plan);
 
@@ -30,7 +30,7 @@ class SubscriptionTest extends TestCase
         $this->assertTrue($user->isSubscribeTo($plan));
         $this->assertTrue($user->isSubscribeTo($anotherPlan));
     }
-    
+
     /** @test */
     public function we_must_pay_user_when_charge_date_has_come()
     {
@@ -80,6 +80,22 @@ class SubscriptionTest extends TestCase
 
         $user->subscriptions->first()->cancel();
 
+        $this->assertTrue($user->isSubscribeTo($plan));
+
+        $plan = IyzipayLaravel::plan('ASAP')->price(10);
+        $user->subscribe($plan);
+
+        $user = $user->fresh();
+        $user->subscriptions[1]->cancel();
+        $this->assertFalse($user->isSubscribeTo($plan));
+
+        $plan = IyzipayLaravel::plan('15 Days Later')->trialDays(15)->price(10);
+        $user->subscribe($plan);
+
+        $user = $user->fresh();
+        $user->subscriptions[2]->cancel();
+        $user->subscriptions[2]->next_charge_at = Carbon::yesterday();
+        $user->subscriptions[2]->save();
         $this->assertFalse($user->isSubscribeTo($plan));
     }
 }

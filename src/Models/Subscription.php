@@ -14,9 +14,22 @@ class Subscription extends Model
 
     protected $dates = [
         'next_charge_at',
+        'canceled_at',
         'created_at',
         'updated_at'
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->whereNull('canceled_at')
+                     ->where('next_charge_at', '>=', Carbon::now());
+    }
+
+    public function scopeNotPaid($query)
+    {
+        return $query->whereNull('canceled_at')
+                     ->where('next_charge_at', '<', Carbon::now());
+    }
 
     public function owner(): BelongsTo
     {

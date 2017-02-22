@@ -2,6 +2,8 @@
 
 namespace Actuallymab\IyzipayLaravel;
 
+use Actuallymab\IyzipayLaravel\Commands\SubscriptionChargeCommand;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 
 class IyzipayLaravelServiceProvider extends ServiceProvider
@@ -19,6 +21,17 @@ class IyzipayLaravelServiceProvider extends ServiceProvider
         ]);
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
+
+        $this->app->booted(function () {
+            $schedule = $this->app->make(Schedule::class);
+            $schedule->command('iyzipay:subscription_charge')->daily();
+        });
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                SubscriptionChargeCommand::class
+            ]);
+        }
     }
 
     /**
