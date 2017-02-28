@@ -29,6 +29,11 @@ use Iyzipay\Request\CreatePaymentRequest;
 trait PreparesTransactionRequest
 {
 
+    /**
+     * Validation for the transaction
+     *
+     * @param $attributes
+     */
     protected function validateTransactionFields($attributes): void
     {
         $totalPrice = 0;
@@ -57,6 +62,8 @@ trait PreparesTransactionRequest
     }
 
     /**
+     * Creates transaction on iyzipay.
+     *
      * @param Payable $payable
      * @param CreditCard $creditCard
      * @param array $attributes
@@ -119,6 +126,13 @@ trait PreparesTransactionRequest
         return $cancel;
     }
 
+    /**
+     * Prepares create payment request class for iyzipay.
+     *
+     * @param array $attributes
+     * @param bool $subscription
+     * @return CreatePaymentRequest
+     */
     private function createPaymentRequest(array $attributes, $subscription = false): CreatePaymentRequest
     {
         $paymentRequest = new CreatePaymentRequest();
@@ -139,6 +153,12 @@ trait PreparesTransactionRequest
         return $paymentRequest;
     }
 
+    /**
+     * Prepares cancel request class for iyzipay
+     *
+     * @param $iyzipayKey
+     * @return CreateCancelRequest
+     */
     private function prepareCancelRequest($iyzipayKey): CreateCancelRequest
     {
         $cancelRequest = new CreateCancelRequest();
@@ -149,6 +169,13 @@ trait PreparesTransactionRequest
         return $cancelRequest;
     }
 
+    /**
+     * Prepares payment card class for iyzipay
+     *
+     * @param Payable $payable
+     * @param CreditCard $creditCard
+     * @return PaymentCard
+     */
     private function preparePaymentCard(Payable $payable, CreditCard $creditCard): PaymentCard
     {
         $paymentCard = new PaymentCard();
@@ -158,6 +185,12 @@ trait PreparesTransactionRequest
         return $paymentCard;
     }
 
+    /**
+     * Prepares buyer class for iyzipay
+     *
+     * @param Payable $payable
+     * @return Buyer
+     */
     private function prepareBuyer(Payable $payable): Buyer
     {
         $buyer = new Buyer();
@@ -176,6 +209,13 @@ trait PreparesTransactionRequest
         return $buyer;
     }
 
+    /**
+     * Prepares address class for iyzipay.
+     *
+     * @param Payable $payable
+     * @param string $type
+     * @return Address
+     */
     private function prepareAddress(Payable $payable, $type = 'shippingAddress'): Address
     {
         $address = new Address();
@@ -189,6 +229,12 @@ trait PreparesTransactionRequest
         return $address;
     }
 
+    /**
+     * Prepares basket items class for iyzipay.
+     *
+     * @param Collection $products
+     * @return array
+     */
     private function prepareBasketItems(Collection $products): array
     {
         $basketItems = [];

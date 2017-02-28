@@ -37,6 +37,14 @@ trait PreparesCreditCardRequest
         }
     }
 
+    /**
+     * Prepares credit card on iyzipay.
+     *
+     * @param Payable $payable
+     * @param $attributes
+     * @return Card
+     * @throws CardSaveException
+     */
     private function createCardOnIyzipay(Payable $payable, $attributes): Card
     {
         $cardRequest = $this->createCardRequest($payable, $attributes);
@@ -55,6 +63,13 @@ trait PreparesCreditCardRequest
         return $card;
     }
 
+    /**
+     * Prepare card request class for iyzipay.
+     *
+     * @param Payable $payable
+     * @param $attributes
+     * @return CreateCardRequest
+     */
     private function createCardRequest(Payable $payable, $attributes): CreateCardRequest
     {
         $cardRequest = new CreateCardRequest();
@@ -70,6 +85,12 @@ trait PreparesCreditCardRequest
         return $cardRequest;
     }
 
+    /**
+     * Removes a card on iyzipay
+     *
+     * @param CreditCard $creditCard
+     * @throws CardRemoveException
+     */
     private function removeCardOnIyzipay(CreditCard $creditCard): void
     {
         try {
@@ -83,6 +104,12 @@ trait PreparesCreditCardRequest
         }
     }
 
+    /**
+     * Prepares remove card request class for iyzipay.
+     *
+     * @param CreditCard $creditCard
+     * @return DeleteCardRequest
+     */
     private function removeCardRequest(CreditCard $creditCard): DeleteCardRequest
     {
         $removeRequest = new DeleteCardRequest();
@@ -93,6 +120,12 @@ trait PreparesCreditCardRequest
         return $removeRequest;
     }
 
+    /**
+     * Prepares card information class for iyzipay
+     *
+     * @param $attributes
+     * @return CardInformation
+     */
     private function createCardInformation($attributes): CardInformation
     {
         $cardInformation = new CardInformation();

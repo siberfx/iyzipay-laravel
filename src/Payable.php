@@ -17,7 +17,10 @@ use Actuallymab\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
 trait Payable
 {
 
-    public function setBillFieldsAttribute($value)
+    /**
+     * @param $value
+     */
+    public function setBillFieldsAttribute(BillFields $value)
     {
         $this->attributes['bill_fields'] = (string)$value;
     }
@@ -36,26 +39,54 @@ trait Payable
         return (new \JsonMapper())->map(json_decode($value), new BillFields());
     }
 
+    /**
+     * Credit card relationship for the payable model
+     *
+     * @return HasMany
+     */
     public function creditCards(): HasMany
     {
         return $this->hasMany(CreditCard::class, 'billable_id');
     }
 
+    /**
+     * Transaction relationship for the payable model
+     *
+     * @return HasMany
+     */
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class, 'billable_id');
     }
 
+    /**
+     * Payable can has many subscriptions
+     *
+     * @return HasMany
+     */
     public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class, 'billable_id');
     }
 
+    /**
+     * Add credit card for payable
+     *
+     * @param array $attributes
+     * @return CreditCard
+     */
     public function addCreditCard(array $attributes = []): CreditCard
     {
         return IyzipayLaravel::addCreditCard($this, $attributes);
     }
 
+    /**
+     * Remove credit card credentials from the payable
+     *
+     * @param CreditCard $creditCard
+     * @return bool
+     * @throws CardRemoveException
+     */
     public function removeCreditCard(CreditCard $creditCard): bool
     {
         if ( ! $this->creditCards->contains($creditCard)) {
@@ -65,11 +96,24 @@ trait Payable
         return IyzipayLaravel::removeCreditCard($creditCard);
     }
 
+    /**
+     * Single payment for the payable
+     *
+     * @param Collection $products
+     * @param string $currency
+     * @param int $installment
+     * @param bool $subscription
+     * @return Transaction
+     */
     public function pay(Collection $products, $currency = 'TRY', $installment = 1, $subscription = false): Transaction
     {
         return IyzipayLaravel::singlePayment($this, $products, $currency, $installment, $subscription);
     }
 
+    /**
+     * Subscribe to a plan.
+     * @param Plan $plan
+     */
     public function subscribe(Plan $plan): void
     {
         Model::unguard();
@@ -88,6 +132,12 @@ trait Payable
         Model::reguard();
     }
 
+    /**
+     * Check if payable subscribe to a plan
+     *
+     * @param Plan $plan
+     * @return bool
+     */
     public function isSubscribeTo(Plan $plan): bool
     {
         foreach ($this->subscriptions as $subscription) {
@@ -100,6 +150,9 @@ trait Payable
         return false;
     }
 
+    /**
+     * Payment for the subscriptions of payable
+     */
     public function paySubscription()
     {
         foreach ($this->subscriptions as $subscription) {
@@ -118,6 +171,11 @@ trait Payable
         }
     }
 
+    /**
+     * Check payable can have bill fields.
+     *
+     * @return bool
+     */
     public function isBillable(): bool
     {
         return ! empty($this->bill_fields);
