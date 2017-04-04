@@ -106,7 +106,8 @@ Let's continue with your `App/User` model.
         'alias'  => 'asd', 
         'number' => '5526080000000006',
         'month'  => '01'
-        'year'   => '2030'
+        'year'   => '2030',
+        'holder' => 'Mehmet Aydın Bahadır'
     ]);
 ```
 
