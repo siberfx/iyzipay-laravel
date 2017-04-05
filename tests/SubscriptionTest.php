@@ -36,7 +36,7 @@ class SubscriptionTest extends TestCase
     {
         $user = $this->prepareBilledUser();
         $user->addCreditCard($this->prepareCreditCardFields());
-        $plan = IyzipayLaravel::plan('ASAP')->price(10);
+        $plan = IyzipayLaravel::plan('asap', 'ASAP')->price(10);
         $user->subscribe($plan);
 
         try {
@@ -56,7 +56,7 @@ class SubscriptionTest extends TestCase
     {
         $user = $this->prepareBilledUser();
         $user->addCreditCard($this->prepareCreditCardFields());
-        $plan = IyzipayLaravel::plan('10 Days Later')->trialDays(10)->price(10);
+        $plan = IyzipayLaravel::plan('10-days-later', '10 Days Later')->trialDays(10)->price(10);
         $user->subscribe($plan);
 
         try {
@@ -75,21 +75,21 @@ class SubscriptionTest extends TestCase
     {
         $user = $this->prepareBilledUser();
         $user->addCreditCard($this->prepareCreditCardFields());
-        $plan = IyzipayLaravel::plan('10 Days Later')->trialDays(10)->price(10);
+        $plan = IyzipayLaravel::plan('10-days-later', '10 Days Later')->trialDays(10)->price(10);
         $user->subscribe($plan);
 
         $user->subscriptions->first()->cancel();
 
         $this->assertTrue($user->isSubscribeTo($plan));
 
-        $plan = IyzipayLaravel::plan('ASAP')->price(10);
+        $plan = IyzipayLaravel::plan('asap', 'ASAP')->price(10);
         $user->subscribe($plan);
 
         $user = $user->fresh();
         $user->subscriptions[1]->cancel();
         $this->assertFalse($user->isSubscribeTo($plan));
 
-        $plan = IyzipayLaravel::plan('15 Days Later')->trialDays(15)->price(10);
+        $plan = IyzipayLaravel::plan('15-days-later', '15 Days Later')->trialDays(15)->price(10);
         $user->subscribe($plan);
 
         $user = $user->fresh();

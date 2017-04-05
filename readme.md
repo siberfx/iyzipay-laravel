@@ -158,24 +158,24 @@ Now we can get paid, through `pay` function of our payable model.
 You can create your plans at `AppServiceProvider.php` file's `register()` method. 
 
 ```php
-	\IyzipayLaravel::plan('Aylık Ücretsiz');
-    \IyzipayLaravel::plan('Aylık Standart')->trialDays(15)->price(20);
-    \IyzipayLaravel::plan('Aylık Platinum')->trialDays(15)->price(40);
-    \IyzipayLaravel::plan('Yıllık Küçük')->yearly()->price(150);
-    \IyzipayLaravel::plan('Yıllık Standart')->yearly()->trialDays(15)->price(200);
-    \IyzipayLaravel::plan('Yıllık Platinum')->yearly()->trialDays(15)->price(400);
+	\IyzipayLaravel::plan('aylik-ucretsiz', 'Aylık Ücretsiz');
+    \IyzipayLaravel::plan('aylik-standart', 'Aylık Standart')->trialDays(15)->price(20);
+    \IyzipayLaravel::plan('aylik-platinum', 'Aylık Platinum')->trialDays(15)->price(40);
+    \IyzipayLaravel::plan('yillik-kucuk', 'Yıllık Küçük')->yearly()->price(150);
+    \IyzipayLaravel::plan('yillik-standart', 'Yıllık Standart')->yearly()->trialDays(15)->price(200);
+    \IyzipayLaravel::plan('yillik-platinum', 'Yıllık Platinum')->yearly()->trialDays(15)->price(400);
 ```
 
 As you can see, you can create monthly or yearly plans very easily, also you can define trial days for your plans.
 
-Also you can filter your plans with `IyzipayLaravel::plans()` collection.
+Also you can filter your plans with `IyzipayLaravel::plans()` collection or `IyzipayLaravel::monthlyPlans()` || `IyzipayLaravel::yearlyPlans()` || `IyzipayLaravel::findPlan($id)`
 
 ### 6- Subscription to plans
 
 You can subscribe your `PayableContract`'s to plans with just like this;
 
 ```php
-	$user->subscribe(\IyzipayLaravel::plans()->first());
+	$user->subscribe(\IyzipayLaravel::findPlan($id));
 ```
 
 **To get paid in time be sure that, you already mapped schedule runner to your cron file [like this](https://laravel.com/docs/5.4/scheduling#introduction).**

@@ -110,12 +110,12 @@ abstract class TestCase extends Orchestra
 
     protected function createPlans(): void
     {
-        IyzipayLaravel::plan('Aylık Ücretisiz');
-        IyzipayLaravel::plan('Aylık Standart')->trialDays(15)->price(20);
-        IyzipayLaravel::plan('Aylık Platinum')->trialDays(15)->price(40);
-        IyzipayLaravel::plan('Yıllık Küçük')->yearly()->trialDays(15)->price(150);
-        IyzipayLaravel::plan('Yıllık Standart')->yearly()->trialDays(15)->price(200);
-        IyzipayLaravel::plan('Yıllık Platinum')->yearly()->trialDays(15)->price(400);
+        IyzipayLaravel::plan('aylik-ucretsiz', 'Aylık Ücretisiz');
+        IyzipayLaravel::plan('aylik-standart', 'Aylık Standart')->trialDays(15)->price(20);
+        IyzipayLaravel::plan('aylik-platinum', 'Aylık Platinum')->trialDays(15)->price(40);
+        IyzipayLaravel::plan('yillik-kucuk', 'Yıllık Küçük')->yearly()->trialDays(15)->price(150);
+        IyzipayLaravel::plan('yillik-standart', 'Yıllık Standart')->yearly()->trialDays(15)->price(200);
+        IyzipayLaravel::plan('yillik-platinum', 'Yıllık Platinum')->yearly()->trialDays(15)->price(400);
     }
 
     protected function correctCardNumbers(): array

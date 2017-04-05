@@ -11,6 +11,13 @@ class Plan extends StorableClass implements ProductContract
 {
 
     /**
+     * The plan's id
+     *
+     * @var string
+     */
+    public $id;
+
+    /**
      * The plan's displayable name
      *
      * @var string
@@ -69,6 +76,20 @@ class Plan extends StorableClass implements ProductContract
     public function name($name)
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Set the id of the plan.
+     *
+     * @param  string $id
+     *
+     * @return $this
+     */
+    public function id($id)
+    {
+        $this->id = $id;
 
         return $this;
     }

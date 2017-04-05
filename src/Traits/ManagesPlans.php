@@ -19,13 +19,14 @@ trait ManagesPlans
     /**
      * Create a new plan instance.
      *
-     * @param  string $name
+     * @param string $id
+     * @param string $name
      *
      * @return Plan
      */
-    public static function plan($name): Plan
+    public static function plan($id, $name): Plan
     {
-        static::$plans[] = $plan = (new Plan())->name($name);
+        static::$plans[] = $plan = (new Plan())->name($name)->id($id);
 
         return $plan;
     }
@@ -58,6 +59,17 @@ trait ManagesPlans
     public static function monthlyPlans(): Collection
     {
         return static::plans()->where('interval', 'monthly');
+    }
+
+    /**
+     * Find plan by id
+     *
+     * @param $id
+     * @return Plan | null
+     */
+    public static function findPlan($id)
+    {
+        return static::plans()->where('id', $id)->first();
     }
 
     /**
