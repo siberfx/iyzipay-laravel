@@ -199,7 +199,7 @@ For testing purposes after `composer install`, you must `cp .env.example .env` a
     * Canceling Subscriptions ✓
 * Documentation
 
-## Author
+## Author
 
 Originally developed by Mehmet Aydin Bahadir (mehmet.aydin.bahadir@gmail.com). 
 Now officially maintained by iyzico.
