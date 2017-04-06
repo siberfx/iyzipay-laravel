@@ -1,10 +1,9 @@
 <?php
 
+namespace Iyzico\IyzipayLaravel\Models;
 
-namespace Actuallymab\IyzipayLaravel\Models;
-
-use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionVoidException;
-use Actuallymab\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
+use Iyzico\IyzipayLaravel\Exceptions\Transaction\TransactionVoidException;
+use Iyzico\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

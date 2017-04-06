@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Actuallymab\IyzipayLaravel\Tests;
+namespace Iyzico\IyzipayLaravel\Tests;
 
-use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
-use Actuallymab\IyzipayLaravel\IyzipayLaravel;
+use Iyzico\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
+use Iyzico\IyzipayLaravel\IyzipayLaravel;
 use Carbon\Carbon;
 
 class SubscriptionTest extends TestCase

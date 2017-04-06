@@ -1,10 +1,8 @@
 <?php
 
+namespace Iyzico\IyzipayLaravel\Events;
 
-namespace Actuallymab\IyzipayLaravel\Events;
-
-
-use Actuallymab\IyzipayLaravel\PayableContract as Payable;
+use Iyzico\IyzipayLaravel\PayableContract as Payable;
 
 class SubscriptionCouldNotPaid
 {

@@ -1,15 +1,14 @@
 <?php
 
+namespace Iyzico\IyzipayLaravel\Traits;
 
-namespace Actuallymab\IyzipayLaravel\Traits;
-
-use Actuallymab\IyzipayLaravel\Exceptions\Fields\TransactionFieldsException;
-use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
-use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionVoidException;
-use Actuallymab\IyzipayLaravel\Models\CreditCard;
-use Actuallymab\IyzipayLaravel\Models\Transaction;
-use Actuallymab\IyzipayLaravel\PayableContract as Payable;
-use Actuallymab\IyzipayLaravel\ProductContract;
+use Iyzico\IyzipayLaravel\Exceptions\Fields\TransactionFieldsException;
+use Iyzico\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
+use Iyzico\IyzipayLaravel\Exceptions\Transaction\TransactionVoidException;
+use Iyzico\IyzipayLaravel\Models\CreditCard;
+use Iyzico\IyzipayLaravel\Models\Transaction;
+use Iyzico\IyzipayLaravel\PayableContract as Payable;
+use Iyzico\IyzipayLaravel\ProductContract;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;

@@ -1,7 +1,6 @@
 <?php
 
-
-namespace Actuallymab\IyzipayLaravel\Exceptions\Fields;
+namespace Iyzico\IyzipayLaravel\Exceptions\Fields;
 
 class PlanFieldsException extends \InvalidArgumentException
 {

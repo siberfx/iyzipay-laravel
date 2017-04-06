@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Actuallymab\IyzipayLaravel\Commands;
+namespace Iyzico\IyzipayLaravel\Commands;
 
 
-use Actuallymab\IyzipayLaravel\Events\SubscriptionCouldNotPaid;
-use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
-use Actuallymab\IyzipayLaravel\Models\Subscription;
-use Actuallymab\IyzipayLaravel\PayableContract as Payable;
+use Iyzico\IyzipayLaravel\Events\SubscriptionCouldNotPaid;
+use Iyzico\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
+use Iyzico\IyzipayLaravel\Models\Subscription;
+use Iyzico\IyzipayLaravel\PayableContract as Payable;
 use Illuminate\Console\Command;
 
 class SubscriptionChargeCommand extends Command

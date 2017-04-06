@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Actuallymab\IyzipayLaravel\Exceptions\Card;
+namespace Iyzico\IyzipayLaravel\Exceptions\Card;
 
 class CardRemoveException extends \Exception
 {

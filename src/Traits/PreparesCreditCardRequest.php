@@ -1,13 +1,12 @@
 <?php
 
+namespace Iyzico\IyzipayLaravel\Traits;
 
-namespace Actuallymab\IyzipayLaravel\Traits;
-
-use Actuallymab\IyzipayLaravel\Exceptions\Card\CardRemoveException;
-use Actuallymab\IyzipayLaravel\Exceptions\Card\CardSaveException;
-use Actuallymab\IyzipayLaravel\Exceptions\Fields\CreditCardFieldsException;
-use Actuallymab\IyzipayLaravel\Models\CreditCard;
-use Actuallymab\IyzipayLaravel\PayableContract as Payable;
+use Iyzico\IyzipayLaravel\Exceptions\Card\CardRemoveException;
+use Iyzico\IyzipayLaravel\Exceptions\Card\CardSaveException;
+use Iyzico\IyzipayLaravel\Exceptions\Fields\CreditCardFieldsException;
+use Iyzico\IyzipayLaravel\Models\CreditCard;
+use Iyzico\IyzipayLaravel\PayableContract as Payable;
 use Illuminate\Support\Facades\Validator;
 use Iyzipay\Model\Card;
 use Iyzipay\Model\CardInformation;

@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Actuallymab\IyzipayLaravel\Tests;
+namespace Iyzico\IyzipayLaravel\Tests;
 
-use Actuallymab\IyzipayLaravel\Exceptions\Card\PayableMustHaveCreditCardException;
-use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
-use Actuallymab\IyzipayLaravel\Exceptions\Fields\TransactionFieldsException;
-use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
-use Actuallymab\IyzipayLaravel\Models\Transaction;
-use Actuallymab\IyzipayLaravel\Tests\Models\User;
+use Iyzico\IyzipayLaravel\Exceptions\Card\PayableMustHaveCreditCardException;
+use Iyzico\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
+use Iyzico\IyzipayLaravel\Exceptions\Fields\TransactionFieldsException;
+use Iyzico\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
+use Iyzico\IyzipayLaravel\Models\Transaction;
+use Iyzico\IyzipayLaravel\Tests\Models\User;
 use Models\Product;
 use Illuminate\Support\Collection;
 use Iyzipay\Model\Currency;

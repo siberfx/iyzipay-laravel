@@ -1,9 +1,8 @@
 <?php
 
+namespace Iyzico\IyzipayLaravel\StorableClasses;
 
-namespace Actuallymab\IyzipayLaravel\StorableClasses;
-
-use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
+use Iyzico\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
 
 class BillFields extends StorableClass
 {

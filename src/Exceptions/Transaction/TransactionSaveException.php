@@ -1,6 +1,6 @@
 <?php
 
-namespace Actuallymab\IyzipayLaravel\Exceptions\Transaction;
+namespace Iyzico\IyzipayLaravel\Exceptions\Transaction;
 
 class TransactionSaveException extends \Exception
 {

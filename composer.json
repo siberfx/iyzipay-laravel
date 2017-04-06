@@ -1,20 +1,19 @@
 {
-  "name": "actuallymab/iyzipay-laravel",
+  "name": "iyzico/iyzipay-laravel",
   "type": "library",
   "description": "Iyzipay (by Iyzico) integration for your Laravel projects.",
   "keywords": [
-    "actuallymab",
     "iyzipay-laravel",
     "iyzico",
     "iyzipay"
   ],
-  "homepage": "https://github.com/actuallymab/iyzipay-laravel",
+  "homepage": "https://github.com/iyzico/iyzipay-laravel",
   "license": "MIT",
   "authors": [
     {
       "name": "Mehmet Aydin Bahadir",
       "email": "mehmet.aydin.bahadir@gmail.com",
-      "homepage": "http://actuallymab.me",
+      "homepage": "https://actuallymab.github.io",
       "role": "Software Engineer"
     }
   ],
@@ -34,12 +33,12 @@
   },
   "autoload": {
     "psr-4": {
-      "Actuallymab\\IyzipayLaravel\\": "src"
+      "Iyzico\\IyzipayLaravel\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Actuallymab\\IyzipayLaravel\\Tests\\": "tests"
+      "Iyzico\\IyzipayLaravel\\Tests\\": "tests"
     }
   },
   "scripts": {

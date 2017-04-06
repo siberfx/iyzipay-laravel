@@ -1,8 +1,8 @@
 <?php
 
-namespace Actuallymab\IyzipayLaravel;
+namespace Iyzico\IyzipayLaravel;
 
-use Actuallymab\IyzipayLaravel\Commands\SubscriptionChargeCommand;
+use Iyzico\IyzipayLaravel\Commands\SubscriptionChargeCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\ServiceProvider;
 

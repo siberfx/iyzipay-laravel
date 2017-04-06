@@ -1,14 +1,13 @@
 <?php
 
-namespace Actuallymab\IyzipayLaravel\Tests\Models;
+namespace Iyzico\IyzipayLaravel\Tests\Models;
 
-use Actuallymab\IyzipayLaravel\Payable;
-use Actuallymab\IyzipayLaravel\PayableContract;
+use Iyzico\IyzipayLaravel\Payable;
+use Iyzico\IyzipayLaravel\PayableContract;
 use Illuminate\Database\Eloquent\Model;
 
 class User extends Model implements PayableContract
 {
-
     use Payable;
 
     protected $fillable = [

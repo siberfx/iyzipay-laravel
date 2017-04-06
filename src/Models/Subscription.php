@@ -1,9 +1,8 @@
 <?php
 
+namespace Iyzico\IyzipayLaravel\Models;
 
-namespace Actuallymab\IyzipayLaravel\Models;
-
-use Actuallymab\IyzipayLaravel\StorableClasses\Plan;
+use Iyzico\IyzipayLaravel\StorableClasses\Plan;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Actuallymab\IyzipayLaravel\Tests;
+namespace Iyzico\IyzipayLaravel\Tests;
 
-use Actuallymab\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
+use Iyzico\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
 
 class PlansTest extends TestCase
 {

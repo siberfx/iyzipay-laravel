@@ -1,7 +1,6 @@
 <?php
 
-
-namespace Actuallymab\IyzipayLaravel\Exceptions\Card;
+namespace Iyzico\IyzipayLaravel\Exceptions\Card;
 
 class PayableMustHaveCreditCardException extends \Exception
 {

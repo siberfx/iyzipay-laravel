@@ -1,9 +1,8 @@
 <?php
 
+namespace Iyzico\IyzipayLaravel\StorableClasses;
 
-namespace Actuallymab\IyzipayLaravel\StorableClasses;
-
-use Actuallymab\IyzipayLaravel\Exceptions\Fields\AddressFieldsException;
+use Iyzico\IyzipayLaravel\Exceptions\Fields\AddressFieldsException;
 
 class Address extends StorableClass
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace Actuallymab\IyzipayLaravel\Tests;
+namespace Iyzico\IyzipayLaravel\Tests;
 
-use Actuallymab\IyzipayLaravel\Exceptions\Fields\CreditCardFieldsException;
-use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
-use Actuallymab\IyzipayLaravel\Models\CreditCard;
+use Iyzico\IyzipayLaravel\Exceptions\Fields\CreditCardFieldsException;
+use Iyzico\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
+use Iyzico\IyzipayLaravel\Models\CreditCard;
 
 class CreditCardsTest extends TestCase
 {

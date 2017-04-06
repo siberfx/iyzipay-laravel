@@ -1,27 +1,27 @@
 <?php
 
-namespace Actuallymab\IyzipayLaravel;
+namespace Iyzico\IyzipayLaravel;
 
-use Actuallymab\IyzipayLaravel\Exceptions\Card\PayableMustHaveCreditCardException;
-use Actuallymab\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
-use Actuallymab\IyzipayLaravel\Exceptions\Card\CardRemoveException;
-use Actuallymab\IyzipayLaravel\Exceptions\Fields\CreditCardFieldsException;
-use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
-use Actuallymab\IyzipayLaravel\Exceptions\Transaction\TransactionVoidException;
-use Actuallymab\IyzipayLaravel\Exceptions\Iyzipay\IyzipayAuthenticationException;
-use Actuallymab\IyzipayLaravel\Exceptions\Iyzipay\IyzipayConnectionException;
-use Actuallymab\IyzipayLaravel\Models\CreditCard;
-use Actuallymab\IyzipayLaravel\Models\Transaction;
-use Actuallymab\IyzipayLaravel\Traits\ManagesPlans;
-use Actuallymab\IyzipayLaravel\Traits\PreparesCreditCardRequest;
-use Actuallymab\IyzipayLaravel\Traits\PreparesTransactionRequest;
+use Iyzico\IyzipayLaravel\Exceptions\Card\PayableMustHaveCreditCardException;
+use Iyzico\IyzipayLaravel\Exceptions\Fields\BillFieldsException;
+use Iyzico\IyzipayLaravel\Exceptions\Card\CardRemoveException;
+use Iyzico\IyzipayLaravel\Exceptions\Fields\CreditCardFieldsException;
+use Iyzico\IyzipayLaravel\Exceptions\Transaction\TransactionSaveException;
+use Iyzico\IyzipayLaravel\Exceptions\Transaction\TransactionVoidException;
+use Iyzico\IyzipayLaravel\Exceptions\Iyzipay\IyzipayAuthenticationException;
+use Iyzico\IyzipayLaravel\Exceptions\Iyzipay\IyzipayConnectionException;
+use Iyzico\IyzipayLaravel\Models\CreditCard;
+use Iyzico\IyzipayLaravel\Models\Transaction;
+use Iyzico\IyzipayLaravel\Traits\ManagesPlans;
+use Iyzico\IyzipayLaravel\Traits\PreparesCreditCardRequest;
+use Iyzico\IyzipayLaravel\Traits\PreparesTransactionRequest;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Iyzipay\Model\ApiTest;
 use Iyzipay\Model\Payment;
 use Iyzipay\Options;
 use Iyzipay\Model\Locale;
-use Actuallymab\IyzipayLaravel\PayableContract as Payable;
+use Iyzico\IyzipayLaravel\PayableContract as Payable;
 
 class IyzipayLaravel
 {

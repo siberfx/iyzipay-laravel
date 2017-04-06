@@ -1,6 +1,6 @@
 <?php
 
-namespace Actuallymab\IyzipayLaravel;
+namespace Iyzico\IyzipayLaravel;
 
 use Illuminate\Support\Facades\Facade;
 

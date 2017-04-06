@@ -1,9 +1,8 @@
 <?php
 
+namespace Iyzico\IyzipayLaravel\Traits;
 
-namespace Actuallymab\IyzipayLaravel\Traits;
-
-use Actuallymab\IyzipayLaravel\StorableClasses\Plan;
+use Iyzico\IyzipayLaravel\StorableClasses\Plan;
 use Illuminate\Support\Collection;
 
 trait ManagesPlans

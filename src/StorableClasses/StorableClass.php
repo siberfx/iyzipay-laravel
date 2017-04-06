@@ -1,7 +1,6 @@
 <?php
 
-
-namespace Actuallymab\IyzipayLaravel\StorableClasses;
+namespace Iyzico\IyzipayLaravel\StorableClasses;
 
 abstract class StorableClass
 {

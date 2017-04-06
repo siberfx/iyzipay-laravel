@@ -1,6 +1,6 @@
 <?php
 
-namespace Actuallymab\IyzipayLaravel\Exceptions\Iyzipay;
+namespace Iyzico\IyzipayLaravel\Exceptions\Iyzipay;
 
 class IyzipayConnectionException extends \Exception
 {

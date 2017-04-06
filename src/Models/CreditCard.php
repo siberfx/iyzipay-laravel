@@ -1,7 +1,6 @@
 <?php
 
-
-namespace Actuallymab\IyzipayLaravel\Models;
+namespace Iyzico\IyzipayLaravel\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

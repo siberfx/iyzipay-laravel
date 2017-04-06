@@ -1,18 +1,18 @@
 <?php
 
-namespace Actuallymab\IyzipayLaravel;
+namespace Iyzico\IyzipayLaravel;
 
-use Actuallymab\IyzipayLaravel\Exceptions\Card\CardRemoveException;
-use Actuallymab\IyzipayLaravel\Models\CreditCard;
-use Actuallymab\IyzipayLaravel\Models\Subscription;
-use Actuallymab\IyzipayLaravel\Models\Transaction;
-use Actuallymab\IyzipayLaravel\StorableClasses\BillFields;
-use Actuallymab\IyzipayLaravel\StorableClasses\Plan;
+use Iyzico\IyzipayLaravel\Exceptions\Card\CardRemoveException;
+use Iyzico\IyzipayLaravel\Models\CreditCard;
+use Iyzico\IyzipayLaravel\Models\Subscription;
+use Iyzico\IyzipayLaravel\Models\Transaction;
+use Iyzico\IyzipayLaravel\StorableClasses\BillFields;
+use Iyzico\IyzipayLaravel\StorableClasses\Plan;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
-use Actuallymab\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
+use Iyzico\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
 
 trait Payable
 {

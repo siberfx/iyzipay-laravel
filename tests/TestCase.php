@@ -1,16 +1,16 @@
 <?php
 
-namespace Actuallymab\IyzipayLaravel\Tests;
+namespace Iyzico\IyzipayLaravel\Tests;
 
-use Actuallymab\IyzipayLaravel\StorableClasses\Address;
-use Actuallymab\IyzipayLaravel\StorableClasses\BillFields;
-use Actuallymab\IyzipayLaravel\Tests\Models\User;
-use Actuallymab\IyzipayLaravel\IyzipayLaravelServiceProvider;
+use Iyzico\IyzipayLaravel\StorableClasses\Address;
+use Iyzico\IyzipayLaravel\StorableClasses\BillFields;
+use Iyzico\IyzipayLaravel\Tests\Models\User;
+use Iyzico\IyzipayLaravel\IyzipayLaravelServiceProvider;
 use Dotenv\Dotenv;
 use Faker\Factory;
 use Orchestra\Database\ConsoleServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
-use Actuallymab\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
+use Iyzico\IyzipayLaravel\IyzipayLaravelFacade as IyzipayLaravel;
 
 abstract class TestCase extends Orchestra
 {
@@ -50,7 +50,7 @@ abstract class TestCase extends Orchestra
             'prefix' => '',
         ]);
 
-        $app['config']->set('iyzipay.billableModel', 'Actuallymab\IyzipayLaravel\Tests\Models\User');
+        $app['config']->set('iyzipay.billableModel', 'Iyzico\IyzipayLaravel\Tests\Models\User');
     }
 
     public function getPackageProviders($application)

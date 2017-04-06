@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Actuallymab\IyzipayLaravel;
+namespace Iyzico\IyzipayLaravel;
 
-use Actuallymab\IyzipayLaravel\Models\CreditCard;
-use Actuallymab\IyzipayLaravel\Models\Transaction;
-use Actuallymab\IyzipayLaravel\StorableClasses\Plan;
+use Iyzico\IyzipayLaravel\Models\CreditCard;
+use Iyzico\IyzipayLaravel\Models\Transaction;
+use Iyzico\IyzipayLaravel\StorableClasses\Plan;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 

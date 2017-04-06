@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Actuallymab\IyzipayLaravel;
+namespace Iyzico\IyzipayLaravel;
 
 interface ProductContract
 {

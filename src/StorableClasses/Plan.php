@@ -1,10 +1,9 @@
 <?php
 
+namespace Iyzico\IyzipayLaravel\StorableClasses;
 
-namespace Actuallymab\IyzipayLaravel\StorableClasses;
-
-use Actuallymab\IyzipayLaravel\Exceptions\Fields\PlanFieldsException;
-use Actuallymab\IyzipayLaravel\ProductContract;
+use Iyzico\IyzipayLaravel\Exceptions\Fields\PlanFieldsException;
+use Iyzico\IyzipayLaravel\ProductContract;
 use Iyzipay\Model\BasketItemType;
 
 class Plan extends StorableClass implements ProductContract

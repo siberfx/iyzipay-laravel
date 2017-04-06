@@ -1,7 +1,6 @@
 <?php
 
-
-namespace Actuallymab\IyzipayLaravel\Exceptions\Transaction;
+namespace Iyzico\IyzipayLaravel\Exceptions\Transaction;
 
 class TransactionRefundException extends \Exception
 {
