@@ -2,7 +2,7 @@
 
 This package is under development and all contributions are welcomed!
 
-This package covers popular payment solution [iyzipay](https://github.com/iyzico/iyzipay-php) with eloquent support, so you can store credit cards and also create charges for your application's users! This package also implements a basic **Subscription** model for your users / organizations (whatever your Payable model is). So you can create plans for your users, and get paid.
+This package covers [PHP API client of iyzipay](https://github.com/iyzico/iyzipay-php) with eloquent support, so you can store credit cards and also create charges for your application's users! This package also implements a basic **Subscription** model for your users / organizations (whatever your Payable model is). So you can create plans for your users, and get paid.
 
 Think this package like iyzipay version of popular [laravel cashier](https://github.com/laravel/cashier) package.
 
@@ -184,7 +184,7 @@ You can subscribe your `PayableContract`'s to plans with just like this;
 
 For testing purposes after `composer install`, you must `cp .env.example .env` and modify `.env` file with your credentials. 
 
-## Roadmap:
+## Roadmap
 * Bill Storage ✓
 * Card Storage ✓
     * Add Credit Card ✓
@@ -199,3 +199,7 @@ For testing purposes after `composer install`, you must `cp .env.example .env` a
     * Canceling Subscriptions ✓
 * Documentation
 
+## Author
+
+Originally developed by Mehmet Aydin Bahadir (mehmet.aydin.bahadir@gmail.com). 
+Now officially maintained by iyzico.
