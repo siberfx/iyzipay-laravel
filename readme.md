@@ -8,18 +8,18 @@ Think this package like iyzipay version of popular [laravel cashier](https://git
 
 ## Install
 
-Add package to your composer.json file `"actuallymab/iyzipay-laravel": "dev-master"`. And run `composer install`.
+Add package to your composer.json file `"iyzico/iyzipay-laravel": "dev-master"`. And run `composer install`.
 
 Add service provider to your `app.php` file
 
 ``` php
-\Actuallymab\IyzipayLaravel\IyzipayLaravelServiceProvider::class
+Iyzico\IyzipayLaravel\IyzipayLaravelServiceProvider::class
 ```
 
 Add IyzipayLaravel facade to your `app.php`file. This action helps to create plans for your payable models.
 
 ``` php
-'IyzipayLaravel' => \Actuallymab\IyzipayLaravel\IyzipayLaravelFacade::class
+'IyzipayLaravel' => Iyzico\IyzipayLaravel\IyzipayLaravelFacade::class
 ```
 
 Publish configuration file:
@@ -60,8 +60,8 @@ First, `PayableContract` must be implemented by your payable model, and it must 
 
 ``` php
 ...
-use Actuallymab\IyzipayLaravel\Payable;
-use Actuallymab\IyzipayLaravel\PayableContract;
+use Iyzico\IyzipayLaravel\Payable;
+use Iyzico\IyzipayLaravel\PayableContract;
 
 class User extends Authenticatable implements PayableContract
 {
@@ -76,8 +76,8 @@ class User extends Authenticatable implements PayableContract
 Let's continue with your `App/User` model. 
 
 ``` php
-    use Actuallymab\IyzipayLaravel\StorableClasses\Address;
-    use Actuallymab\IyzipayLaravel\StorableClasses\BillFields;
+    use Iyzico\IyzipayLaravel\StorableClasses\Address;
+    use Iyzico\IyzipayLaravel\StorableClasses\BillFields;
 
     $user = factory(\App\User::class)->create();
     $user->bill_fields = new BillFields([
@@ -116,7 +116,7 @@ Let's continue with your `App/User` model.
 OK, now we want to sell products right? Then, your product model must be implement `ProductContract` of this package.
 
 ``` php
-use Actuallymab\IyzipayLaravel\ProductContract;
+use Iyzico\IyzipayLaravel\ProductContract;
 
 class Product extends Model implements ProductContract
 {
