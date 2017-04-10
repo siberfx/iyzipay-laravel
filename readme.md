@@ -1,10 +1,16 @@
-# Iyzipay (by Iyzico) Integration for Laravel
+# iyzipay (by iyzico) Integration for Laravel
 
-This package is under development and all contributions are welcomed!
+This package is under development. All contributions are welcomed!
+
+You can sign up for an iyzico account at [iyzico.com](https://www.iyzico.com).
 
 ## Documentation
 
 See the [wiki](https://github.com/iyzico/iyzipay-laravel/wiki) for full documentation, examples, operational details and other information. 
+
+# Installation
+
+You can check all required steps for installing the api from [installation wiki page](https://github.com/iyzico/iyzipay-laravel/wiki/Installation)
 
 ## Roadmap
 * Bill Storage ✓
