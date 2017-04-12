@@ -57,9 +57,9 @@ class Transaction extends Model
         return IyzipayLaravel::void($this);
     }
 
-    public function refund($price = null, $productId = null): Transaction
+    public function refund(): Transaction
     {
-        return IyzipayLaravel::refund($this, $price, $productId);
+        return IyzipayLaravel::void($this);
     }
 
     public function getRefundedAmountAttribute()

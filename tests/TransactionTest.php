@@ -85,6 +85,23 @@ class TransactionTest extends TestCase
         }
     }
 
+    /** @test */
+    public function transaction_can_be_refunded_full()
+    {
+        $user = $this->prepareUserHasCard();
+        $products = $this->prepareProducts();
+
+        try {
+            $transaction = $user->pay($products);
+            $this->assertInstanceOf(Transaction::class, $transaction->refund());
+            $this->assertEquals($transaction->amount, $transaction->refunded_amount);
+        } catch (TransactionSaveException $e) {
+            if (str_contains('System error', $e->getMessage())) { // Its weird but we face this error sometimes.
+                $this->transaction_can_be_refunded_full();
+            }
+        }
+    }
+
     protected function prepareUserHasCard(): User
     {
         $user = $this->prepareBilledUser();
