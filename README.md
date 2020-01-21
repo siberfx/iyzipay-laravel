@@ -1,3 +1,7 @@
+# DEPRECATED - no longer actively maintained
+
+
+
 # iyzipay (by iyzico) Integration for Laravel
 
 This package is under development. All contributions are welcomed!
